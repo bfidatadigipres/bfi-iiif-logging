@@ -11,7 +11,7 @@ The
 
 ## Decision Drivers
 
-* There is familiararity at BFI with maintaining and managing the chosen RDBMS implementation.
+* There is familiarity at BFI with maintaining and managing the chosen RDBMS implementation.
 * Ease of use, rapid development at Digirati.
 * Open source, readily available, and well supported.
 
@@ -46,7 +46,7 @@ In addition, it caters to more modern web usecases by allowing storage and index
 #### Pros
 
 * Digirati has many years of experience designing, deploying, and maintaining PostgreSQL databases.
-* PostgreSQL will easily handle queries for more complex reporting reporting, due to the availability of powerful SQL features like windowing, partitioning, CTEs, etc.
+* PostgreSQL will easily handle queries for more complex reporting, due to the availability of powerful SQL features like windowing, partitioning, CTEs, etc.
 * PostgreSQL has a strong following in the container/cloud computing ecosystem, making troubleshooting, debugging, and implementation easier with the resources provided by the community.
 
 #### Cons
