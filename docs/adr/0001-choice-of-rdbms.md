@@ -1,6 +1,6 @@
 # Choice of RDBMS for User Event storage
 
-* Status: proposed
+* Status: accepted
 * Deciders: Daniel Grant <daniel.grant@digirati.com>, Gary Tierney <gary.tierney@digirati.com>, Stephen Fraser <stephen.fraser@digirati.com>
 * Date: 2021-02-15
 
@@ -20,19 +20,18 @@ The
 * PostgreSQL
 * MySQL
 
-<!-- ## Decision Outcome
+## Decision Outcome
 
-Chosen option: "[option 1]", because [justification. e.g., only option, which meets k.o. criterion decision driver | which resolves force force | … | comes out best (see below)].
+Chosen option: MySQL, because BFI's experience with their existing MySQL databases will make maintenance and reporting easier for them in the long run.
+Additionally, the data model we will be creating is simple enough that we wouldn't expect to put any features of the database to its limits.
 
 ### Positive Consequences
 
-* [e.g., improvement of quality attribute satisfaction, follow-up decisions required, …]
-* …
+* Using the database as a source of data for a reporting tool is easier for BFI, due to experience with MySQL
 
 ### Negative Consequences
 
-* [e.g., compromising quality attribute, follow-up decisions required, …]
-* … -->
+* We will need to find out which distribution of MySQL BFI usually deploy (upstream, MariaDB, PerconaDB?)
 
 ## Pros and Cons of the Options
 
@@ -72,6 +71,5 @@ PerconaDB and MariaDB took charge on bringing MySQL up to speed in their respect
 
 #### Cons
 
-* Designing an efficient data model is more difficult than in other RDBMS, due to missing standard SQL features
 * Does not cover the full SQL standard, especially in versions before MySQL 8.
 * Documentation, deployment guides, etc. tend to be split between MariaDB and PerconaDB.
