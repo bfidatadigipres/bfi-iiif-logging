@@ -44,8 +44,6 @@ It has been the industry leader in the Java space for a long time and as a resul
 Kotlin is relatively new to the scene when compared to Java, however, it is still a JVM language and offers interoperability both ways between Java and Kotlin code.
 The main selling point of Kotlin is the ability to write code unconstrained by the boilerplate of Java while still having the entire Java ecosystem available as tooling.
 
-[example | description | pointer to more information | …] <!-- optional -->
-
 #### Pros
 
 * 20+ years of combined experience in JVM/Spring applications
@@ -97,4 +95,3 @@ Python seems to be the language of choice for BFI, however it is not a typical c
 #### Cons
 
 * Likely not the best choice for rapid development at Digirati.
-
