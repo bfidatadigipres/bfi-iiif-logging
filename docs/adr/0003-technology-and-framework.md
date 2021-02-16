@@ -20,23 +20,25 @@ Digirati must decide on the technologies (and frameworks, if applicable) used to
 * TypeScript, Express
 * Python, Django
 
-<!-- ## Decision Outcome -->
+## Decision Outcome
 
-<!-- Chosen option: "[option 1]", because [justification. e.g., only option, which meets k.o. criterion decision driver | which resolves force force | … | comes out best (see below)]. -->
+Chosen option: Kotlin/Spring, because our vast experience with the JVM and Spring will make this a straight-forward project.
+Kotlin does not have the boilerplate cost associated with Java, so BFI should still have an easy time picking up the domain specific code.
+In addition, since Spring does so much for us, we don't expect to write any code that is not concerned entirely with handling these audit events.
 
-<!-- ### Positive Consequences optional -->
+### Positive Consequences optional
 
-<!-- * [e.g., improvement of quality attribute satisfaction, follow-up decisions required, …] -->
-<!-- * … -->
+* Much faster development cycle for the API components
+* Spring Boot can host both the API and the viewer assets, unifying everything under one service and keeping authentication simple
+* Straight forward deployment whether Docker or bare-metal, the JVM is a well supported piece of software available for every major operating system.
 
-<!-- ### Negative Consequences optional -->
+### Negative Consequences optional
 
-<!-- * [e.g., compromising quality attribute, follow-up decisions required, …] -->
-<!-- * … -->
+* Not as simple as a Python project for BFI develpers to pick up and work on
 
 ## Pros and Cons of the Options
 
-### Kotlin, Spring
+### Kotlin/Spring
 
 Spring is a well-known solution to building applications on JVM platforms.
 It has been the industry leader in the Java space for a long time and as a result has no trouble solving the majority of technical problems we'd encounter out of the box.
@@ -57,7 +59,7 @@ The main selling point of Kotlin is the ability to write code unconstrained by t
 
 * No experience at BFI with writing code for the JVM
 
-### TypeScript, Express
+### TypeScript/Express
 
 Express is a barebones web server implementation for the NodeJS platform.
 The web server itself is mostly a skeleton, which is usually extended using middleware that are able to intercept requests and responses, reading and writing to them as needed to add additional functionality.
@@ -77,7 +79,7 @@ A fully TypeScript codebase requires that dependencies also have TypeScript bind
 * Less of a complete solution out of the box
 * Poor documentation, outdated examples, frequently changing ecosystem
 
-### Python, Django
+### Python/Django
 
 Django is a web framework intended for rapid development in Python.
 Like Spring, it comes with the majority of the tools that are needed in building a modern website out of the box and allows you to get started writing domain specific code.
