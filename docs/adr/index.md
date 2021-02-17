@@ -8,6 +8,7 @@ This log lists the architectural decisions for BFI Discovery.
 - [ADR-0001](0001-choice-of-rdbms.md) - Choice of RDMS
 - [ADR-0002](0002-choice-of-auth-provider.md) - Choice of Authentication Provider
 - [ADR-0003](0003-choice-of-technology-and-framework.md) - Choice of Technology and Framework
+- [ADR-0004](0004-universal-viewer-customisations.md) - Approach for Integrating and Customising the Universal Viewer
 
 <!-- adrlogstop -->
 
