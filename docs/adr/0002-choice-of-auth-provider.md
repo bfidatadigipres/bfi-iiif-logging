@@ -57,33 +57,40 @@ either.
 
 ### Auth0
 
-* Good, because it offers a free tier with basic features, with the
-  option to upgrade / downgrade over time.
-* Good, because it's easy and fast to get started with.
-* Good, because it has no deployment and ongoing hosting /
-  infrastructure costs.
-* Good, because patches and maintenance are provided by Auth0 at no cost
-  / interruption to the customer.
-* Good, because it can be configured / bootstrapped using Infrastructure
-  as Code (i.e., Terraform).
-* Bad, because the ability to customise the product are limited by both
-  the subscription tier and by the product in general.
-* Bad, because only community support is provided in the free tier with
-  varying SLA's in the paid tiers.
+#### Pros
+
+* Fffers a free tier with basic features, with the option to upgrade /
+  downgrade over time.
+* Easy and fast to get started with.
+* Has no deployment and ongoing hosting / infrastructure costs.
+* Patches and maintenance are provided by Auth0 at no cost /
+  interruption to the customer.
+* Can be configured / bootstrapped using Infrastructure as Code (i.e.,
+  Terraform).
+
+#### Cons
+
+* Ability to customise the product are limited by both the subscription
+  tier and by the product in general.
+* Only community support is provided in the free tier with varying SLA's
+  in the paid tiers.
 
 ### Keycloak
 
-* Good, because it's free and open source and thus has no ongoing
-  licensing or subscription costs.
-* Good, because it contains a full suite of advanced and sophisticated
-  features.
-* Good, because it can be tailored and customised to meet virtually any
-  use case / requirements.
-* Good, because it can be configured / bootstrapped using Infrastructure
-  as Code (i.e., Terraform).
-* Bad, because it requires deployment and ongoing hosting /
-  infrastructure costs.
-* Bad, because it requires regular patching and upgrading for security
-  and to stay within a supported version.
-* Bad, because support requires procurements of an expensive license
-  from Red Hat, Inc.
+#### Pros
+
+* Free and open source and thus has no ongoing licensing or subscription
+  costs.
+* Contains a full suite of advanced and sophisticated features.
+* Can be tailored and customised to meet virtually any use case /
+  requirements.
+* Can be configured / bootstrapped using Infrastructure as Code (i.e.,
+  Terraform).
+
+#### Cons
+
+* Requires deployment and ongoing hosting / infrastructure costs.
+* Requires regular patching and upgrading for security and to stay
+  within a supported version.
+* Support requires procurements of an expensive license from Red Hat,
+  Inc.
