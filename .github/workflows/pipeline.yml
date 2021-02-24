@@ -1,0 +1,9 @@
+name: linting
+on: [push]
+jobs:
+  linting:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - run: pre-commit run --all-files --verbose
