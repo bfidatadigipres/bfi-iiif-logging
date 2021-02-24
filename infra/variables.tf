@@ -93,4 +93,3 @@ variable "auth0_password_history_enabled" {
 variable "auth0_password_history_size" {
   default = 5
 }
-
