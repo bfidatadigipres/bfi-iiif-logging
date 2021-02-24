@@ -20,7 +20,7 @@ resource "auth0_connection" "username_password" {
 
     password_dictionary {
       enable     = var.auth0_password_dictionary_enabled
-      dictionary = []
+      dictionary = var.auth0_password_dictionary
     }
 
     password_no_personal_info {
