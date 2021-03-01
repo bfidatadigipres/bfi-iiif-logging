@@ -57,11 +57,27 @@ variable "auth0_universal_login_background_colour" {
 }
 
 variable "auth0_email_from_user" {
-  default = "noreply"
+  default = "collectionssystems"
 }
 
 variable "auth0_email_from_domain" {
   default = "bfi.org.uk"
+}
+
+variable "auth0_email_smtp_host" {
+
+}
+
+variable "auth0_email_smtp_port" {
+  default = 587
+}
+
+variable "auth0_email_smtp_username" {
+
+}
+
+variable "auth0_email_smtp_password" {
+
 }
 
 variable "auth0_password_policy" {

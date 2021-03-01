@@ -1,3 +1,14 @@
+### git-secret ###
+# https://git-secret.io/
+
+# Configuration
+.gitsecret/keys/pubring.kbx~
+.gitsecret/keys/random_seed
+!*.secret
+
+# Secrets
+infra/vars/dev.tfvars
+infra/vars/prod.tfvars
 
 # Created by https://www.toptal.com/developers/gitignore/api/jetbrains,terraform,kotlin
 # Edit at https://www.toptal.com/developers/gitignore?templates=jetbrains,terraform,kotlin
