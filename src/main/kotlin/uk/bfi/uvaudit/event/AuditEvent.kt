@@ -9,4 +9,3 @@ sealed class AuditEvent  {
     @JsonTypeName("canvas_viewed")
     data class CanvasChanged(val id: String) : AuditEvent()
 }
-
