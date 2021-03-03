@@ -9,8 +9,6 @@ services:
       - MYSQL_PASSWORD_FILE=/run/secrets/passwords/mysql # Double underscore is intentional.
     ports:
       - 8080:8080
-    networks:
-      - mysql
     secrets:
       - source: mysql_password
         target: passwords/mysql

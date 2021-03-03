@@ -15,8 +15,6 @@ services:
       - AUTH0_CLIENT_SECRET
     ports:
       - 8080:8080
-    networks:
-      - mysql
 
   mysql:
     image: mysql:5.7.33
@@ -27,6 +25,3 @@ services:
       - MYSQL_PASSWORD=changeme
       - MySQL_ROOT_PASSWORD=changeme
       - MYSQL_DATABASE=logging
-
-networks:
-  mysql:
