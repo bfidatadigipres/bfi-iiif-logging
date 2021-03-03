@@ -3,6 +3,8 @@ on:
   push:
     branches:
       - master
+    tags:
+      - *
   pull_request:
 jobs:
   linting:
@@ -20,7 +22,7 @@ jobs:
     steps:
       - name: Extract branch name
         run: echo "normalized_branch_name=$(stripped=${GITHUB_REF##*/} && echo ${stripped/\//-})" >> $GITHUB_ENV
-        if: github.event_name != 'push'
+        if: github.event_name == 'push'
 
       - name: Extract branch name for pull request
         run: echo "normalized_branch_name=$(stripped=${PR_REF#refs/heads/} && echo ${stripped/\//-})" >> $GITHUB_ENV
