@@ -6,7 +6,7 @@ services:
     environment:
       - MYSQL_HOST=mysql:3306
       - MYSQL_USERNAME=logging
-      - MYSQL_PASSWORD_FILE=/run/secrets/passwords/mysql # Double underscore is intentional.
+      - MYSQL_PASSWORD_FILE=/run/secrets/passwords/mysql
     ports:
       - 8080:8080
     secrets:
