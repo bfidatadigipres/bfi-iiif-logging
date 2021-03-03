@@ -17,7 +17,7 @@ services:
       - 8080:8080
 
   mysql:
-    image: mysql:5.7.33
+    image: mysql:5.8
     ports:
       - 3306:3306
     environment:
