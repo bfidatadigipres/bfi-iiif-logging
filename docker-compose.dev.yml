@@ -5,13 +5,8 @@ services:
     build:
       dockerfile: Dockerfile
       context: .
-    environment:
-      - MYSQL_HOST=mysql:3306
-      -
     ports:
       - 8080:8080
-    networks:
-      - mysql
 
   mysql:
     image: mysql:5.7.33
@@ -19,8 +14,6 @@ services:
       - 3306:3306
     volumes:
       - mysql_data:/var/lib/mysql
-    networks:
-      - app_network
 networks:
   app_network:
 
