@@ -3,6 +3,8 @@ spring:
     platform: h2
     driver-class-name: org.h2.Driver
     url: jdbc:h2:mem:test;MODE=mySQL;IGNORECASE=TRUE
+  flyway:
+    locations: classpath:db/migrations
   security:
     oauth2:
       client:

@@ -5,6 +5,8 @@ spring:
     url: jdbc:mysql://${MYSQL_HOST}/${MYSQL_DATABASE}?useSSL=false
     username: ${MYSQL_USERNAME}
     password: ${MYSQL_PASSWORD}
+  flyway:
+    locations: classpath:db/migrations
   security:
     oauth2:
       client:
