@@ -39,11 +39,11 @@ jobs:
           password: ${{ secrets.GHCR_TOKEN }}
           registry: ghcr.io
 
-      - name: Create Docker container
-        run: ./gradlew bootBuildImage --imageName=ghcr.io/bfidatadigipres/bfi-iiif-load-balancer:${{ env.normalized_branch_name }}
-
-      - name: Push Docker containers
-        run: |
-          docker tag ghcr.io/bfidatadigipres/bfi-iiif-load-balancer:${{ env.normalized_branch_name }} ghcr.io/bfidatadigipres/bfi-iiif-load-balancer:${{ github.sha }}
-          docker push ghcr.io/bfidatadigipres/bfi-iiif-load-balancer:${{ env.normalized_branch_name }}
-          docker push ghcr.io/bfidatadigipres/bfi-iiif-load-balancer:${{ github.sha }}
+      - name: Push SHA to GitHub Packages
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          tags: |
+            ghcr.io/bfidatadigipres/bfi-iiif-logging:${{ env.normalized_branch_name }}
+            ghcr.io/bfidatadigipres/bfi-iiif-logging:${{ github.sha }}

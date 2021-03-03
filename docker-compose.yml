@@ -1,0 +1,21 @@
+version: "3.9"
+
+services:
+  app:
+    build:
+      dockerfile: Dockerfile
+      context: .
+    ports:
+      - 8080:8080
+
+  mysql:
+    image: mysql:5.7.33
+    ports:
+      - 3306:3306
+    volumes:
+      - mysql_data:/var/lib/mysql
+networks:
+  app_network:
+
+volumes:
+  mysql_data:
