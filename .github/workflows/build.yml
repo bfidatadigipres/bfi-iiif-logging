@@ -24,6 +24,16 @@ jobs:
         env:
           PR_REF: ${{ github.event.pull_request.head.ref }}
 
+      - name: Set up Gradle cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
       - name: Checkout the repo
         uses: actions/checkout@v2
 
