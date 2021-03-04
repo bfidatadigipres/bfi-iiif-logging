@@ -30,7 +30,7 @@ class AuditUserService(
 
         val userId = if (dbUserId == null) {
             val keyHolder = GeneratedKeyHolder()
-            val sql = "INSERT INTO user (sub) VALUES (:sub) ON DUPLICATE KEY UPDATE id = id";
+            val sql = "INSERT INTO user (sub) VALUES (:sub)";
 
             template.update(sql, MapSqlParameterSource(sqlParams), keyHolder)
             keyHolder.key!!.toLong()
