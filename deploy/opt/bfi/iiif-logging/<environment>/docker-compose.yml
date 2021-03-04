@@ -21,7 +21,7 @@ services:
       - MYSQL_PASSWORD_FILE=/run/secrets/passwords/mysql
       - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/passwords/mysql_root
     volumes:
-      - /var/opt/bfi/iiif-logging/<environment>/mounts/mysql_data:/var/lib/mysql
+      - /var/opt/bfi/iiif-logging/${ENVIRONMENT}/mounts/mysql_data:/var/lib/mysql
     secrets:
       - source: mysql_root_password
         target: passwords/mysql_root
@@ -30,6 +30,6 @@ services:
 
 secrets:
   mysql_root_password:
-    file: /etc/opt/bfi/iiif-logging/<environment>/secrets/mysql_root_password
+    file: /etc/opt/bfi/iiif-logging/${ENVIRONMENT}/secrets/mysql_root_password
   mysql_password:
-    file: /etc/opt/bfi/iiif-logging/<environment>secrets/mysql_password
+    file: /etc/opt/bfi/iiif-logging/${ENVIRONMENT}/secrets/mysql_password
