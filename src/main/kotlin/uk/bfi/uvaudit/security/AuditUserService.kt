@@ -22,7 +22,7 @@ class AuditUserService(
         val template = NamedParameterJdbcTemplate(ds)
 
         val sqlParams = mapOf("sub" to oidcUser.subject)
-        var dbUserId = template.queryForObject(
+        val dbUserId = template.queryForObject(
             "SELECT FROM user where sub = :sub",
             MapSqlParameterSource(sqlParams),
             Long::class.java
