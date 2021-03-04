@@ -6,7 +6,7 @@ theme:
   name: mkdocs
 
 nav:
-  - Home: README.md
+  - Home: index.md
   - Architecture Decision Records:
       - 01. Choice of RDBMS: docs/adr/0001-choice-of-rdbms.md
       - 02. Choice of Authentication provider: docs/adr/0002-choice-of-auth-provider.md
