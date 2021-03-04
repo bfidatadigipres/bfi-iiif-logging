@@ -39,10 +39,10 @@ class JdbcAuditEventWriter(private val ds: DataSource) : AuditEventWriter {
 
     private fun writeResourceLoadedEvent(parentRecord: Long, event: AuditEvent.ResourceLoaded) {
         val sql = """
-            INSERT INTO image_changed
-                (audit_event_id, manifest, canvas_id)
+            INSERT INTO resource_loaded
+                (audit_event_id, uri)
             VALUES
-                (:audit_event_id, :manifest, :canvas_id)""";
+                (:audit_event_id, :uri)""";
 
         template.update(sql, mapOf(
             "audit_event_id" to parentRecord,
@@ -80,6 +80,6 @@ class JdbcAuditEventWriter(private val ds: DataSource) : AuditEventWriter {
         )
 
         template.update(sql, MapSqlParameterSource(sqlParams), keyHolder)
-        return keyHolder.key as Long
+        return keyHolder.key!!.toLong()
     }
 }

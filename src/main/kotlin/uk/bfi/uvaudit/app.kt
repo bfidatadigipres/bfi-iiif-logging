@@ -13,6 +13,7 @@ import javax.sql.DataSource
 
 @SpringBootApplication
 class ViewerAuditApplication : WebSecurityConfigurerAdapter() {
+
     @Autowired
     lateinit var auditUserService: AuditUserService
 
