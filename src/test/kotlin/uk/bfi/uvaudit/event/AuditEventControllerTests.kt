@@ -6,7 +6,9 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.security.oauth2.core.oidc.OidcIdToken
@@ -33,7 +35,12 @@ val auditUser = AuditUser(
     )
 )
 
-@WebMvcTest(AuditEventController::class)
+@SpringBootTest(
+    properties = [
+        "spring.flyway.enabled=true"
+    ]
+)
+@AutoConfigureMockMvc
 @AutoConfigureTestDatabase
 internal class AuditEventControllerTests {
 
@@ -46,7 +53,10 @@ internal class AuditEventControllerTests {
     @BeforeEach
     fun setup() {
         val template = NamedParameterJdbcTemplate(ds)
-        template.update("""INSERT INTO user (sub) VALUES ("test@user.com") ON DUPLICATE KEY UPDATE id = id""", emptyMap<String, Any>())
+        template.update(
+            """INSERT INTO user (sub) VALUES ("test@user.com") ON DUPLICATE KEY UPDATE id = id""",
+            emptyMap<String, Any>()
+        )
     }
 
     @Test
