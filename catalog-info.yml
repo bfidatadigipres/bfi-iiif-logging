@@ -1,0 +1,16 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: bfi-iiif-logging
+  description: BFI IIIF Audit Event Logging
+  annotations:
+    github.com/project-slug: https://github.com/bfidatadigipres/bfi-iiif-logging
+    jira/project-key: BFI
+  tags:
+    - java
+    - business-agility
+    - iiif
+    - auth
+spec:
+  lifecycle: development
+  domain: bfi
