@@ -6,8 +6,9 @@ import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
-import uk.bfi.uvaudit.event.console.LoggingAuditEventWriter
+import uk.bfi.uvaudit.event.jdbc.JdbcAuditEventWriter
 import uk.bfi.uvaudit.security.AuditUserService
+import javax.sql.DataSource
 
 
 @SpringBootApplication
@@ -29,7 +30,7 @@ class ViewerAuditApplication : WebSecurityConfigurerAdapter() {
 
     // @TODO: Replace this with a MySQL backend.
     @Bean
-    fun auditEventWriter() = LoggingAuditEventWriter()
+    fun auditEventWriter(ds: DataSource) = JdbcAuditEventWriter(ds)
 }
 
 fun main(args: Array<String>) {

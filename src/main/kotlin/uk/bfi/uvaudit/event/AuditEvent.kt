@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonTypeName
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
 sealed class AuditEvent  {
+    lateinit var type: String
+
     @JsonTypeName("download_panel_opened")
     data class DownloadPanelOpened(val manifest: String, val canvas: String) : AuditEvent()
 
@@ -13,5 +15,5 @@ sealed class AuditEvent  {
     data class ResourceLoaded(val uri: String) : AuditEvent()
 
     @JsonTypeName("image_changed")
-    data class ImageChanged(val manifest: String, val canvas: String)
+    data class ImageChanged(val manifest: String, val canvas: String) : AuditEvent()
 }
