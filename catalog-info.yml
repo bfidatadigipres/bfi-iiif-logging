@@ -15,3 +15,4 @@ spec:
   type: website
   lifecycle: development
   domain: bfi
+  owner: digirati-co-uk/bfi-developers
