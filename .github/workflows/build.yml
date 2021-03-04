@@ -15,7 +15,7 @@ jobs:
         env:
           MYSQL_USER: logging
           MYSQL_PASSWORD: testactionspw
-          MySQL_ROOT_PASSWORD: testactionspw
+          MYSQL_ROOT_PASSWORD: testactionspw
           MYSQL_DATABASE: logging
         ports:
           - 3306
