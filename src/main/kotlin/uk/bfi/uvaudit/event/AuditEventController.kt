@@ -2,19 +2,30 @@ package uk.bfi.uvaudit.event
 
 import mu.KotlinLogging
 import org.springframework.http.HttpStatus
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.ResponseStatus
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.http.converter.HttpMessageNotReadableException
+import org.springframework.security.core.annotation.AuthenticationPrincipal
+import org.springframework.web.bind.annotation.*
+import uk.bfi.uvaudit.security.AuditUser
+
 
 @RestController
-class AuditEventController {
-    private val logger = KotlinLogging.logger {}
+class AuditEventController(
+    private val writer: AuditEventWriter
+) {
+    private val logger = KotlinLogging.logger { }
+
+    @ExceptionHandler(HttpMessageNotReadableException::class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    protected fun handleHttpMessageNotReadable(
+        ex: HttpMessageNotReadableException
+    ) {
+        logger.error("Audit event structure was invalid", ex)
+    }
 
     @PostMapping("/api/event")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    fun onEvent(@RequestBody event: AuditEvent) {
-        logger.info { "Received event: ${event}" }
+    fun onEvent(@AuthenticationPrincipal user: AuditUser, @RequestBody event: AuditEvent) {
+        writer.write(user.id, event)
     }
 
 }
