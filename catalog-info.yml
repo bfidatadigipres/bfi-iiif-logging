@@ -4,8 +4,9 @@ metadata:
   name: bfi-iiif-logging
   description: BFI IIIF Audit Event Logging
   annotations:
-    github.com/project-slug: https://github.com/bfidatadigipres/bfi-iiif-logging
+    github.com/project-slug: bfidatadigipres/bfi-iiif-logging
     jira/project-key: BFI
+    backstage.io/techdocs-ref: url:https://github.com/bfidatadigipres/bfi-iiif-logging
   tags:
     - java
     - business-agility
