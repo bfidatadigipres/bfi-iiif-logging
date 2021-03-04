@@ -27,7 +27,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("io.github.microutils:kotlin-logging:1.12.0")
-    implementation("org.flywaydb:flyway-core:7.5.4")
+    implementation("org.flywaydb:flyway-core:6.5.7")
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 
