@@ -1,0 +1,14 @@
+# /etc/systemd/system/iiif-logging.service
+[Unit]
+Description=IIIF Logging Service
+After=docker.service
+
+[Service]
+Type=simple
+RemainAfterExit=yes
+WorkingDirectory=/opt/bfi/iiif-logging
+ExecStart=/usr/local/bin/docker-compose --file /opt/bfi/iiif-logging/docker-compose.yml --env-file /etc/opt/bfi/iiif-logging/config.env up --remove-orphans --abort-on-container-exit --no-color
+ExecStop=/usr/local/bin/docker-compose --file /opt/bfi/iiif-logging/docker-compose.yml --env-file /etc/opt/bfi/iiif-logging/config.env down
+
+[Install]
+WantedBy=multi-user.target

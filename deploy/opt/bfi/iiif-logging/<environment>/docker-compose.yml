@@ -1,0 +1,35 @@
+version: "3.9"
+
+services:
+  app:
+    image: ghcr.io/bfidatadigipres/bfi-iiif-logging:${LOGGING_IMAGE_TAG}
+    environment:
+      - MYSQL_HOST=mysql:3306
+      - MYSQL_USERNAME=logging
+      - MYSQL_PASSWORD_FILE=/run/secrets/passwords/mysql
+    ports:
+      - ${LOGGING_PORT}:8080
+    secrets:
+      - source: mysql_password
+        target: passwords/mysql
+
+  mysql:
+    image: mysql:${MYSQL_IMAGE_TAG}
+    environment:
+      - MYSQL_DATABASE=logging
+      - MYSQL_USER=logging
+      - MYSQL_PASSWORD_FILE=/run/secrets/passwords/mysql
+      - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/passwords/mysql_root
+    volumes:
+      - /var/opt/bfi/iiif-logging/${ENVIRONMENT}/mounts/mysql_data:/var/lib/mysql
+    secrets:
+      - source: mysql_root_password
+        target: passwords/mysql_root
+      - source: mysql_password
+        target: passwords/mysql
+
+secrets:
+  mysql_root_password:
+    file: /etc/opt/bfi/iiif-logging/${ENVIRONMENT}/secrets/mysql_root_password
+  mysql_password:
+    file: /etc/opt/bfi/iiif-logging/${ENVIRONMENT}/secrets/mysql_password
