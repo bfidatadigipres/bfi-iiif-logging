@@ -8,10 +8,10 @@ theme:
 nav:
   - Home: index.md
   - Architecture Decision Records:
-      - 01. Choice of RDBMS: docs/adr/0001-choice-of-rdbms.md
-      - 02. Choice of Authentication provider: docs/adr/0002-choice-of-auth-provider.md
-      - 03. Choice of Technology and Framework: docs/adr/0003-choice-of-technology-and-framework.md
-      - 04. Universal Viewer customisations: docs/adr/0004-universal-viewer-customisations.md
+      - 01. Choice of RDBMS: adr/0001-choice-of-rdbms.md
+      - 02. Choice of Authentication provider: adr/0002-choice-of-auth-provider.md
+      - 03. Choice of Technology and Framework: adr/0003-choice-of-technology-and-framework.md
+      - 04. Universal Viewer customisations: adr/0004-universal-viewer-customisations.md
 
 plugins:
   - techdocs-core
