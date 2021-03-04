@@ -9,17 +9,6 @@ on:
   pull_request:
 jobs:
   linting:
-    services:
-      mysql:
-        image: mysql:5.7
-        env:
-          MYSQL_USER: logging
-          MYSQL_PASSWORD: testactionspw
-          MYSQL_ROOT_PASSWORD: testactionspw
-          MYSQL_DATABASE: logging
-        ports:
-          - 3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
@@ -31,6 +20,17 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
   build_and_push:
     runs-on: ubuntu-20.04
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_USER: logging
+          MYSQL_PASSWORD: testactionspw
+          MYSQL_ROOT_PASSWORD: testactionspw
+          MYSQL_DATABASE: logging
+        ports:
+          - 3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     steps:
       - name: Extract branch name
         run: echo "normalized_branch_name=$(stripped=${GITHUB_REF##*/} && echo ${stripped/\//-})" >> $GITHUB_ENV
