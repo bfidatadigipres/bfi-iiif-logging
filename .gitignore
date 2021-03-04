@@ -172,5 +172,3 @@ override.tf.json
 # example: *tfplan*
 
 # End of https://www.toptal.com/developers/gitignore/api/jetbrains,terraform,kotlin
-deploy/etc/opt/bfi/iiif-logging/secrets/mysql_password
-deploy/etc/opt/bfi/iiif-logging/secrets/mysql_root_password
