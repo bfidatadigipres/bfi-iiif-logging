@@ -26,7 +26,7 @@ class ViewerAuditApplication : WebSecurityConfigurerAdapter() {
     }
 
     @Bean
-    fun auditUserService() = AuditUserService()
+    fun auditUserService(ds: DataSource) = AuditUserService(ds)
 
     // @TODO: Replace this with a MySQL backend.
     @Bean
