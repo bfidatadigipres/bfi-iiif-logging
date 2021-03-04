@@ -6,7 +6,7 @@ metadata:
   annotations:
     github.com/project-slug: bfidatadigipres/bfi-iiif-logging
     jira/project-key: BFI
-    backstage.io/techdocs-ref: url:https://github.com/bfidatadigipres/bfi-iiif-logging
+    backstage.io/techdocs-ref: url:https://github.com/bfidatadigipres/bfi-iiif-logging/tree/backstage/
   tags:
     - java
     - business-agility
