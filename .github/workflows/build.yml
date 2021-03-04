@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-20.04
     services:
       mysql:
-        image: mysql:5.7
+        image: mysql:8
         env:
           MYSQL_USER: logging
           MYSQL_PASSWORD: testactionspw
