@@ -1,21 +1,16 @@
 package uk.bfi.uvaudit.event
 
-import org.flywaydb.core.internal.jdbc.JdbcTemplate
-import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.security.oauth2.core.oidc.OidcIdToken
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser
-import org.springframework.security.oauth2.core.oidc.user.OidcUser
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oauth2Login
-import org.springframework.test.context.event.annotation.BeforeTestClass
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.post
 import uk.bfi.uvaudit.security.AuditUser
@@ -54,7 +49,7 @@ internal class AuditEventControllerTests {
     fun setup() {
         val template = NamedParameterJdbcTemplate(ds)
         template.update(
-            """INSERT INTO user (sub) VALUES ("test@user.com") ON DUPLICATE KEY UPDATE id = id""",
+            "INSERT INTO user (sub) VALUES ('test@user.com') ON DUPLICATE KEY UPDATE id = id",
             emptyMap<String, Any>()
         )
     }

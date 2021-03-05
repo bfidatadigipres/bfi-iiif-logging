@@ -1,12 +1,11 @@
 package uk.bfi.uvaudit.event
 
-import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import com.fasterxml.jackson.annotation.JsonTypeName
 
-
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
-sealed class AuditEvent  {
+sealed class AuditEvent {
+
     abstract val type: String
 
     @JsonTypeName("download_panel_opened")
