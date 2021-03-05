@@ -5,7 +5,7 @@ COPY . /build
 WORKDIR /build
 
 ARG UV_SHA256SUM="3972aadadaeaaf98a01c9a792ce98b848998f27aa6dec592cbe2066aa66e7c0e"
-RUN curl -LO https://cdn.jsdelivr.net/npm/universalviewer@3.1.1/dist/uv.zip \
+RUN curl -LO https://cdn.jsdelivr.net/npm/universalviewer@3.0.27/dist/uv.zip \
     && echo "$UV_SHA256SUM uv.zip" | sha256sum -c - \
     && unzip uv.zip -d src/main/resources/static/uv
 
