@@ -12,8 +12,21 @@ resource "auth0_client" "dummy_test" {
   ]
 
   callbacks = [
-    "${local.auth0_base_uri}/login/callback"
+    "${local.auth0_base_uri}/login/callback",
+    "https://oauthdebugger.com/debug",
+    "http://localhost:8080/login/oauth2/code/auth0"
   ]
+
+  jwt_configuration {
+    alg = "RS256"
+  }
+
+  lifecycle {
+    ignore_changes = [
+      custom_login_page_preview,
+      custom_login_page
+    ]
+  }
 }
 
 ## Platform
@@ -35,6 +48,10 @@ resource "auth0_client" "account_management_system" {
   allowed_logout_urls = [
     local.platform_base_uri
   ]
+
+  jwt_configuration {
+    alg = "RS256"
+  }
 
   lifecycle {
     ignore_changes = [
