@@ -42,7 +42,7 @@ resource "auth0_client" "account_management_system" {
   ]
 
   callbacks = [
-    "${local.platform_base_uri}/callback"
+    "${local.platform_base_uri}/login/oauth2/code/auth0"
   ]
 
   allowed_logout_urls = [

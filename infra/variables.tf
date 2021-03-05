@@ -10,15 +10,15 @@ locals {
 
   # Universal Viewer
   platform_hostnames = {
-    dev  = "uv-dev.bfi.org.uk"
-    prod = "uv.bfi.org.uk"
+    dev  = "bfinationalarchiveviewer-dev.bfi.org.uk"
+    prod = "bfinationalarchiveviewer.bfi.org.uk"
   }
   platform_base_uri = "https://${local.platform_hostnames[terraform.workspace]}"
 
   # Auth0
   auth0_hostnames = {
     dev  = "bfi-iiif-dev.eu.auth0.com",
-    prod = "bfi-iiif-dev.eu.auth0.com"
+    prod = "bfi-iiif.eu.auth0.com"
   }
   auth0_base_uri      = "https://${local.auth0_hostnames[terraform.workspace]}"
   auth0_email_address = "${var.auth0_email_from_user}@${var.auth0_email_from_domain}"
