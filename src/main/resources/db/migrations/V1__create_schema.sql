@@ -4,10 +4,7 @@ CREATE TABLE `user`
     `sub` VARCHAR(30) NOT NULL,
     PRIMARY KEY (`id`),
     UNIQUE KEY `sub_unique` (`sub`)
-    )
-    engine=innodb
-    DEFAULT charset=utf8mb4
-    COLLATE=utf8mb4_0900_ai_ci;
+);
 
 CREATE TABLE `audit_event`
 (
@@ -17,11 +14,9 @@ CREATE TABLE `audit_event`
     `event_type`   VARCHAR(20) NOT NULL,
     PRIMARY KEY (`id`),
     KEY `fk_audit_event_user_idx` (`user_id`),
-    CONSTRAINT `fk_audit_event_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-    )
-    engine=innodb
-    DEFAULT charset=utf8mb4
-    COLLATE=utf8mb4_0900_ai_ci;
+    CONSTRAINT `fk_audit_event_user` FOREIGN KEY (`user_id`) REFERENCES `user`
+        (`id`)
+);
 
 CREATE TABLE `download_panel_opened`
 (
@@ -32,11 +27,8 @@ CREATE TABLE `download_panel_opened`
     PRIMARY KEY (`id`),
     KEY `fk_download_panel_opened_audit_event_idx` (`audit_event_id`),
     CONSTRAINT `fk_download_panel_opened_audit_event` FOREIGN KEY (
-    `audit_event_id`) REFERENCES `audit_event` (`id`)
-    )
-    engine=innodb
-    DEFAULT charset=utf8mb4
-    COLLATE=utf8mb4_0900_ai_ci;
+                                                                   `audit_event_id`) REFERENCES `audit_event` (`id`)
+);
 
 CREATE TABLE `image_changed`
 (
@@ -47,11 +39,8 @@ CREATE TABLE `image_changed`
     PRIMARY KEY (`id`),
     KEY `fk_image_changed_audit_event_idx` (`audit_event_id`),
     CONSTRAINT `fk_image_changed_audit_event` FOREIGN KEY (`audit_event_id`)
-    REFERENCES `audit_event` (`id`)
-    )
-    engine=innodb
-    DEFAULT charset=utf8mb4
-    COLLATE=utf8mb4_0900_ai_ci;
+        REFERENCES `audit_event` (`id`)
+);
 
 CREATE TABLE `resource_loaded`
 (
@@ -61,8 +50,5 @@ CREATE TABLE `resource_loaded`
     PRIMARY KEY (`id`),
     KEY `fk_resource_loaded_audit_event_idx` (`audit_event_id`),
     CONSTRAINT `fk_resource_loaded_audit_event` FOREIGN KEY (`audit_event_id`)
-    REFERENCES `audit_event` (`id`)
-    )
-    engine=innodb
-    DEFAULT charset=utf8mb4
-    COLLATE=utf8mb4_0900_ai_ci;
+        REFERENCES `audit_event` (`id`)
+);
