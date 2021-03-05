@@ -1,14 +1,16 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import de.undercouch.gradle.tasks.download.Download
 
 plugins {
     id("org.springframework.boot") version "2.3.9.BUILD-SNAPSHOT"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     kotlin("jvm") version "1.4.30"
     kotlin("plugin.spring") version "1.4.30"
+    id("de.undercouch.download") version "4.1.1"
 }
 
-group = "uk.bfi"
-version = "0.1.0-SNAPSHOt"
+group = "uk.org.bfi"
+version = "0.1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
@@ -51,5 +53,24 @@ tasks.withType<Test> {
     useJUnitPlatform()
     testLogging {
         showStandardStreams = true
+    }
+}
+
+val downloadUvBundleTask by tasks.register<Download>("downloadUvBundle") {
+    src("https://cdn.jsdelivr.net/npm/universalviewer@3.0.27/dist/uv.zip")
+    mkdir("build/resources/main/static")
+    dest("build/resources/main/static/uv.zip")
+    overwrite(true);
+}
+
+val unzipUvBundleTask by tasks.register<Copy>("unzipUvBundle") {
+    dependsOn(downloadUvBundleTask)
+    from(zipTree(downloadUvBundleTask.dest))
+    into("build/resources/main/static/uv")
+}
+
+tasks {
+    build {
+        downloadUvBundleTask
     }
 }
