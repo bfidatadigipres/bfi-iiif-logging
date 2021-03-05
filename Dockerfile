@@ -11,7 +11,7 @@ EXPOSE 8080
 
 RUN mkdir /app
 COPY --from=build /build/build/libs/*.jar /app/application.jar
-COPY docker-entrypoint.sh /usr/local/bin/
+COPY docker/usr/local/bin/docker-entrypoint.sh /usr/local/bin
 
-ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 CMD ["java", "-jar", "/app/application.jar"]

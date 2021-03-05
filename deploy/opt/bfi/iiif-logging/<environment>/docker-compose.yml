@@ -4,15 +4,19 @@ services:
   app:
     image: ghcr.io/bfidatadigipres/bfi-iiif-logging:${LOGGING_IMAGE_TAG}
     environment:
+      - AUTH0_DOMAIN=${AUTH0_DOMAIN}
+      - AUTH0_CLIENT_ID=${AUTH0_CLIENT_ID}
+      - AUTH0_CLIENT_SECRET_FILE=/run/secrets/auth0/client_secret
       - MYSQL_HOST=mysql:3306
       - MYSQL_USERNAME=logging
       - MYSQL_PASSWORD_FILE=/run/secrets/passwords/mysql
     ports:
       - ${LOGGING_PORT}:8080
     secrets:
+      - source: auth0_client_secret
+        target: auth0/client_secret
       - source: mysql_password
         target: passwords/mysql
-
   mysql:
     image: mysql:${MYSQL_IMAGE_TAG}
     environment:
@@ -29,6 +33,8 @@ services:
         target: passwords/mysql
 
 secrets:
+  auth0_client_secret:
+    file: /etc/opt/bfi/iiif-logging/${ENVIRONMENT}/secrets/auth0_client_secret
   mysql_root_password:
     file: /etc/opt/bfi/iiif-logging/${ENVIRONMENT}/secrets/mysql_root_password
   mysql_password:
