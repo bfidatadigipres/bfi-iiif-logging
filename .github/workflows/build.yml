@@ -1,4 +1,5 @@
 name: build
+
 on:
   push:
     branches:
@@ -19,6 +20,17 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
   build_and_push:
     runs-on: ubuntu-20.04
+    services:
+      mysql:
+        image: mysql:8
+        env:
+          MYSQL_USER: logging
+          MYSQL_PASSWORD: testactionspw
+          MYSQL_ROOT_PASSWORD: testactionspw
+          MYSQL_DATABASE: logging
+        ports:
+          - 3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     steps:
       - name: Extract branch name
         run: echo "normalized_branch_name=$(stripped=${GITHUB_REF##*/} && echo ${stripped/\//-})" >> $GITHUB_ENV
@@ -54,6 +66,10 @@ jobs:
           AUTH0_DOMAIN: ${{ secrets.AUTH0_TEST_DOMAIN }}
           AUTH0_CLIENT_ID: ${{ secrets.AUTH0_TEST_CLIENT_ID }}
           AUTH0_CLIENT_SECRET: ${{ secrets.AUTH0_TEST_CLIENT_SECRET }}
+          MYSQL_HOST: "localhost:${{ job.services.mysql.ports[3306] }}"
+          MYSQL_USERNAME: logging
+          MYSQL_PASSWORD: testactionspw
+          MYSQL_DATABASE: logging
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v1

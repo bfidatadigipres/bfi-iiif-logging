@@ -1,8 +1,13 @@
 spring:
+  test:
+    database:
+      replace: none
   datasource:
-    platform: h2
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:test;MODE=mySQL;IGNORECASE=TRUE
+    platform: mysql
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${MYSQL_HOST}/${MYSQL_DATABASE}?allowPublicKeyRetrieval=true
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}
   flyway:
     locations: classpath:db/migrations
   security:
