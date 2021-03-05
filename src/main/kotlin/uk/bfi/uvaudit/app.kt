@@ -13,7 +13,6 @@ import uk.bfi.uvaudit.event.jdbc.JdbcAuditEventWriter
 import uk.bfi.uvaudit.security.AuditUserService
 import javax.sql.DataSource
 
-
 @SpringBootApplication
 class ViewerAuditApplication : WebSecurityConfigurerAdapter() {
 
