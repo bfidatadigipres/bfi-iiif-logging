@@ -26,7 +26,7 @@ services:
       - source: ssl_key_store_password
         target: passwords/ssl_key_store
       - source: ssl_key_password
-        target: password/ssl_key
+        target: passwords/ssl_key
       - source: mysql_password
         target: passwords/mysql
   mysql:
