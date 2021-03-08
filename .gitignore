@@ -9,9 +9,9 @@
 # Secrets
 infra/vars/dev.tfvars
 infra/vars/prod.tfvars
-ssl/bk-ci-data4.p12
-ssl/bk-ci-data4_key-password
-ssl/bk-ci-data4_key-store-password
+ssl/bk-ci-data4.dpi.bfi.org.uk-key_password
+ssl/bk-ci-data4.dpi.bfi.org.uk-key_store_password
+ssl/bk-ci-data4.dpi.bfi.org.uk.p12
 
 # Created by https://www.toptal.com/developers/gitignore/api/jetbrains,terraform,kotlin
 # Edit at https://www.toptal.com/developers/gitignore?templates=jetbrains,terraform,kotlin
