@@ -1,5 +1,4 @@
 name: build
-
 on:
   push:
     branches:
@@ -33,16 +32,14 @@ jobs:
           - 3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     steps:
-      - name: Extract branch name
+      - name: Extract branch name for push
         run: echo "normalized_branch_name=$(stripped=${GITHUB_REF##*/} && echo ${stripped/\//-})" >> $GITHUB_ENV
         if: github.event_name == 'push'
-
       - name: Extract branch name for pull request
         run: echo "normalized_branch_name=$(stripped=${PR_REF#refs/heads/} && echo ${stripped/\//-})" >> $GITHUB_ENV
         if: github.event_name == 'pull_request'
         env:
           PR_REF: ${{ github.event.pull_request.head.ref }}
-
       - name: Set up Gradle cache
         uses: actions/cache@v2
         with:
@@ -52,17 +49,14 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
-
       - name: Checkout the repo
         uses: actions/checkout@v2
         with:
           submodules: true
-
       - name: Set up Java
         uses: actions/setup-java@v1
         with:
           java-version: '11'
-
       - name: Build and test application
         run: ./gradlew check
         env:
@@ -73,14 +67,12 @@ jobs:
           MYSQL_USERNAME: logging
           MYSQL_PASSWORD: testactionspw
           MYSQL_DATABASE: logging
-
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v1
         with:
           username: ${{ github.actor }}
           password: ${{ secrets.GHCR_TOKEN }}
           registry: ghcr.io
-
       - name: Push SHA to GitHub Packages
         uses: docker/build-push-action@v2
         with:
