@@ -11,11 +11,12 @@ repos:
       - id: check-case-conflict
       - id: check-merge-conflict
       - id: check-symlinks
-        exclude: (
-          ^deploy/etc/opt/bfi/iiif-logging/<environment>/secrets/ssl_key_password|
-          ^deploy/etc/opt/bfi/iiif-logging/<environment>/secrets/ssl_key_store_password|
-          ^deploy/etc/opt/bfi/iiif-logging/<environment>/ssl/ssl_key_store|
-        )
+        exclude: |
+          (?x)(
+            ^deploy/etc/opt/bfi/iiif-logging/<environment>/secrets/ssl_key_password$
+            |^deploy/etc/opt/bfi/iiif-logging/<environment>/secrets/ssl_key_store_password$
+            |^deploy/etc/opt/bfi/iiif-logging/<environment>/ssl/ssl_key_store$
+          )
       - id: detect-private-key
       - id: end-of-file-fixer
       - id: trailing-whitespace
