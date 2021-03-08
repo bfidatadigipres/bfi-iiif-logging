@@ -4,7 +4,7 @@ resource "auth0_connection" "username_password" {
 
   enabled_clients = [
     auth0_client.dummy_test.id,
-    auth0_client.account_management_system.id
+    auth0_client.universal_viewer.id
   ]
 
   options {
