@@ -13,10 +13,11 @@ jobs:
     steps:
       - name: Checkout the repo
         uses: actions/checkout@v2
+
       - name: Run Cypress tests
         uses: cypress-io/github-action@v2
-        run: npm test
-        working-directory: src/test/cypress
+        with:
+          project: src/test/cypress
         env:
           CYPRESS_AUTH0_BASE_URL: ${secrets.CYPRESS_AUTH0_BASE_URL}
           CYPRESS_UV_BASE_URL: ${secrets.CYPRESS_UV_BASE_URL}
