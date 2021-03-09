@@ -58,14 +58,14 @@ tasks.withType<Test> {
 
 val downloadUvBundleTask by tasks.register<Download>("downloadUvBundle") {
     src("https://cdn.jsdelivr.net/npm/universalviewer@3.0.27/dist/uv.zip")
-    dest("src/main/resources/static/uv.zip")
+    dest("${projectDir}/src/main/resources/static/uv.zip")
     overwrite(true);
 }
 
 val unzipUvBundleTask by tasks.register<Copy>("unzipUvBundle") {
     dependsOn(downloadUvBundleTask)
     from(zipTree(downloadUvBundleTask.dest))
-    into("src/main/resources/static/uv")
+    into("${projectDir}/src/main/resources/static/uv")
 }
 
 tasks {
