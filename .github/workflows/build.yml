@@ -57,12 +57,11 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: '11'
-      - name: Run Cypress tests
-        uses: cypress-io/github-action@v2
-        with:
-          start: ./gradlew bootRun
-          wait-on: 'http://localhost:8080'
-          working-directory: src/test/cypress
+        run: |
+          ./gradlew bootRun &
+          cd src/test/cypress
+          wait-on http://localhost:8080
+          npm test
         env:
           SSL_ENABLED: false
           AUTH0_DOMAIN: ${{ secrets.AUTH0_TEST_DOMAIN }}
