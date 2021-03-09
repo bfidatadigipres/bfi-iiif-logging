@@ -17,5 +17,7 @@ jobs:
         uses: actions/setup-node@v1
       - name: NPM install
         run: npm install
+        working-directory: src/test/cypress
       - name: Run NPM tests
         run: npm test
+        working-directory: src/test/cypress
