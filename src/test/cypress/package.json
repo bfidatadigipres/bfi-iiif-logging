@@ -8,6 +8,6 @@
   "license": "MIT",
   "devDependencies": {
     "cypress": "^6.6.0",
-    "wait-on": "^5.2.1"
+    "wait-port": "^0.2.9"
   }
 }
