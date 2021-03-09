@@ -57,9 +57,29 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: '11'
+      - name: Run Cypress tests
+        uses: cypress-io/github-action@v2
+        with:
+          start: ./gradlew bootRun
+          wait-on: 'http://localhost:8080'
+          working-directory: src/test/cypress
+        env:
+          SSL_ENABLED: false
+          AUTH0_DOMAIN: ${{ secrets.AUTH0_TEST_DOMAIN }}
+          AUTH0_CLIENT_ID: ${{ secrets.AUTH0_TEST_CLIENT_ID }}
+          AUTH0_CLIENT_SECRET: ${{ secrets.AUTH0_TEST_CLIENT_SECRET }}
+          MYSQL_HOST: "localhost:${{ job.services.mysql.ports[3306] }}"
+          MYSQL_USERNAME: logging
+          MYSQL_PASSWORD: testactionspw
+          MYSQL_DATABASE: logging
+          CYPRESS_UV_BASE_URL: ${{ secrets.CYPRESS_UV_BASE_URL }}
+          CYPRESS_AUTH0_BASE_URL: ${{ secrets.CYPRESS_AUTH0_BASE_URL }}
+          CYPRESS_AUTH0_USERNAME: ${{ secrets.CYPRESS_AUTH0_USERNAME }}
+          CYPRESS_AUTH0_PASSWORD: ${{ secrets.CYPRESS_AUTH0_PASSWORD }}
       - name: Build and test application
         run: ./gradlew check
         env:
+          SSL_ENABLED: false
           AUTH0_DOMAIN: ${{ secrets.AUTH0_TEST_DOMAIN }}
           AUTH0_CLIENT_ID: ${{ secrets.AUTH0_TEST_CLIENT_ID }}
           AUTH0_CLIENT_SECRET: ${{ secrets.AUTH0_TEST_CLIENT_SECRET }}
