@@ -21,3 +21,8 @@ jobs:
       - name: Run NPM tests
         run: npm test
         working-directory: src/test/cypress
+        env:
+          CYPRESS_AUTH0_BASE_URL: ${secrets.CYPRESS_AUTH0_BASE_URL}
+          CYPRESS_UV_BASE_URL: ${secrets.CYPRESS_UV_BASE_URL}
+          CYPRESS_AUTH0_USERNAME: ${secrets.CYPRESS_AUTH0_USERNAME}
+          CYPRESS_AUTH0_PASSWORD: ${secrets.CYPRESS_AUTH0_PASSWORD}
