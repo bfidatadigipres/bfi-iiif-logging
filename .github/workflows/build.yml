@@ -58,6 +58,7 @@ jobs:
         with:
           java-version: '11'
       - name: Run Cypress tests
+        continue-on-error: true
         run: |
           ./gradlew clean unzipUvBundle build bootRun -x test &
           cd src/test/cypress
@@ -77,6 +78,14 @@ jobs:
           CYPRESS_AUTH0_BASE_URL: ${{ secrets.CYPRESS_AUTH0_BASE_URL }}
           CYPRESS_AUTH0_USERNAME: ${{ secrets.CYPRESS_AUTH0_USERNAME }}
           CYPRESS_AUTH0_PASSWORD: ${{ secrets.CYPRESS_AUTH0_PASSWORD }}
+      - uses: actions/upload-artifact@v2
+        with:
+          name: cypress-screenshots
+          path: src/test/cypress/cypress/screenshots/
+      - uses: actions/upload-artifact@v2
+        with:
+          name: cypress-videos
+          path: src/test/cypress/cypress/videos/
       - name: Build and test application
         run: ./gradlew check
         env:
@@ -102,11 +111,3 @@ jobs:
           tags: |
             ghcr.io/bfidatadigipres/bfi-iiif-logging:${{ env.normalized_branch_name }}
             ghcr.io/bfidatadigipres/bfi-iiif-logging:${{ github.sha }}
-      - uses: actions/upload-artifact@v2
-        with:
-          name: cypress-screenshots
-          path: src/test/cypress/cypress/screenshots/
-      - uses: actions/upload-artifact@v2
-        with:
-          name: cypress-videos
-          path: src/test/cypress/cypress/videos/
