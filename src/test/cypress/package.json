@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "cypress run"
+    "test": "cypress run --browser chrome"
   },
   "license": "MIT",
   "devDependencies": {
