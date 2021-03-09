@@ -1,5 +1,10 @@
 name: cypress
 on:
+  push:
+    branches:
+      - main
+    tags:
+      - '*'
   workflow_dispatch:
 jobs:
   run_cypress:
