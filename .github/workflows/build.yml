@@ -102,3 +102,11 @@ jobs:
           tags: |
             ghcr.io/bfidatadigipres/bfi-iiif-logging:${{ env.normalized_branch_name }}
             ghcr.io/bfidatadigipres/bfi-iiif-logging:${{ github.sha }}
+      - uses: actions/upload-artifact@v2
+        with:
+          name: cypress-screenshots
+          path: src/test/cypress/cypress/screenshots/
+      - uses: actions/upload-artifact@v2
+        with:
+          name: cypress-videos
+          path: src/test/cypress/cypress/videos/
