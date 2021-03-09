@@ -60,9 +60,10 @@ jobs:
       - name: Run Cypress tests
         continue-on-error: true
         run: |
-          ./gradlew clean unzipUvBundle build bootRun -x test &
+          ./gradlew clean unzipUvBundle build -x test
           ls -lAh src/main/resources/static
           ls -lAh src/main/resources/static/uv
+          ./gradlew bootRun &
           cd src/test/cypress
           npm install
           ./node_modules/.bin/wait-port 8080
