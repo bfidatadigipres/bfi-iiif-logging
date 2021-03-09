@@ -62,7 +62,7 @@ jobs:
           ./gradlew bootRun &
           cd src/test/cypress
           npm install
-          ./node_modules/.bin/wait-on http://localhost:8080
+          ./node_modules/.bin/wait-port 8080
           npm test
         env:
           SSL_ENABLED: false
