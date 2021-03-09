@@ -57,6 +57,7 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: '11'
+      - name: Run Cypress tests
         run: |
           ./gradlew bootRun &
           cd src/test/cypress
