@@ -61,6 +61,7 @@ jobs:
         run: |
           ./gradlew bootRun &
           cd src/test/cypress
+          npm install
           wait-on http://localhost:8080
           npm test
         env:
