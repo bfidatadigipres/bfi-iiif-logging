@@ -59,7 +59,7 @@ jobs:
           java-version: '11'
       - name: Run Cypress tests
         run: |
-          ./gradlew bootRun &
+          ./gradlew clean unzipUvBundle build bootRun -x test &
           cd src/test/cypress
           npm install
           ./node_modules/.bin/wait-port 8080

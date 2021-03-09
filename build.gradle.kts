@@ -66,7 +66,7 @@ val downloadUvBundleTask by tasks.register<Download>("downloadUvBundle") {
 val unzipUvBundleTask by tasks.register<Copy>("unzipUvBundle") {
     dependsOn(downloadUvBundleTask)
     from(zipTree(downloadUvBundleTask.dest))
-    into("build/resources/main/static/uv")
+    into("src/main/resources/static/uv")
 }
 
 tasks {
