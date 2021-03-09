@@ -58,8 +58,7 @@ tasks.withType<Test> {
 
 val downloadUvBundleTask by tasks.register<Download>("downloadUvBundle") {
     src("https://cdn.jsdelivr.net/npm/universalviewer@3.0.27/dist/uv.zip")
-    mkdir("build/resources/main/static")
-    dest("build/resources/main/static/uv.zip")
+    dest("src/main/resources/static/")
     overwrite(true);
 }
 
