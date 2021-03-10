@@ -2,7 +2,7 @@
 # For local development / testing of the login flows
 
 resource "auth0_client" "dummy_test" {
-  name                 = "Dummy Test Client (${terraform.workspace})"
+  name                 = "Dummy Test Client${local.environment_qualifier}"
   app_type             = "regular_web"
   is_first_party       = true
   custom_login_page_on = true
@@ -31,8 +31,8 @@ resource "auth0_client" "dummy_test" {
 
 ## Platform
 
-resource "auth0_client" "account_management_system" {
-  name                 = "Account Management System (${terraform.workspace})"
+resource "auth0_client" "universal_viewer" {
+  name                 = "Universal Viewer${local.environment_qualifier}"
   app_type             = "regular_web"
   is_first_party       = true
   custom_login_page_on = true
@@ -42,7 +42,7 @@ resource "auth0_client" "account_management_system" {
   ]
 
   callbacks = [
-    "${local.platform_base_uri}/callback"
+    "${local.platform_base_uri}/login/oauth2/code/auth0"
   ]
 
   allowed_logout_urls = [

@@ -8,17 +8,21 @@ locals {
     "ManagedBy"   = var.tag_managed_by
   }
 
+  # Terraform
+  environment_qualifier = terraform.workspace != "prod" ? " (${upper(terraform.workspace)})" : ""
+
   # Universal Viewer
   platform_hostnames = {
-    dev  = "uv-dev.bfi.org.uk"
-    prod = "uv.bfi.org.uk"
+    dev  = "bfinationalarchiveviewer-dev.bfi.org.uk"
+    prod = "bfinationalarchiveviewer.bfi.org.uk"
   }
   platform_base_uri = "https://${local.platform_hostnames[terraform.workspace]}"
 
   # Auth0
+  auth0_tenant_name = "British Film Institute${local.environment_qualifier}"
   auth0_hostnames = {
     dev  = "bfi-iiif-dev.eu.auth0.com",
-    prod = "bfi-iiif-dev.eu.auth0.com"
+    prod = "bfi-iiif.eu.auth0.com"
   }
   auth0_base_uri      = "https://${local.auth0_hostnames[terraform.workspace]}"
   auth0_email_address = "${var.auth0_email_from_user}@${var.auth0_email_from_domain}"
@@ -35,10 +39,6 @@ variable "tag_managed_by" {
 }
 
 # Auth0
-
-variable "auth0_tenant_name" {
-  default = "BFI IIIF"
-}
 
 variable "auth0_support_address" {
   default = "help@bfi.org.uk"

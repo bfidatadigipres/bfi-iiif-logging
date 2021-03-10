@@ -1,17 +1,24 @@
-- repo: git://github.com/antonbabenko/pre-commit-terraform
-  rev: v1.46.0
-  hooks:
-    - id: terraform_fmt
+repos:
+  - repo: 'git://github.com/antonbabenko/pre-commit-terraform'
+    rev: v1.46.0
+    hooks:
+      - id: terraform_fmt
 
-- repo: git://github.com/pre-commit/pre-commit-hooks
-  rev: v3.4.0
-  hooks:
-    - id: check-added-large-files
-    - id: check-case-conflict
-    - id: check-merge-conflict
-    - id: check-symlinks
-    - id: detect-private-key
-    - id: end-of-file-fixer
-    - id: trailing-whitespace
-    - id: check-json
-    - id: check-yaml
+  - repo: 'git://github.com/pre-commit/pre-commit-hooks'
+    rev: v3.4.0
+    hooks:
+      - id: check-added-large-files
+      - id: check-case-conflict
+      - id: check-merge-conflict
+      - id: check-symlinks
+        exclude: |
+          (?x)(
+            ^deploy/etc/opt/bfi/iiif-logging/<environment>/secrets/ssl_key_password$
+            |^deploy/etc/opt/bfi/iiif-logging/<environment>/secrets/ssl_key_store_password$
+            |^deploy/etc/opt/bfi/iiif-logging/<environment>/ssl/ssl_key_store$
+          )
+      - id: detect-private-key
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: check-json
+      - id: check-yaml

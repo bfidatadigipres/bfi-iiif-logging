@@ -4,15 +4,31 @@ services:
   app:
     image: ghcr.io/bfidatadigipres/bfi-iiif-logging:${LOGGING_IMAGE_TAG}
     environment:
+      - AUTH0_DOMAIN=${AUTH0_DOMAIN}
+      - AUTH0_CLIENT_ID=${AUTH0_CLIENT_ID}
+      - AUTH0_CLIENT_SECRET_FILE=/run/secrets/auth0/client_secret
+      - SSL_ENABLED=true
+      - SSL_KEY_STORE=/run/secrets/ssl/key_store
+      - SSL_KEY_STORE_PASSWORD_FILE=/run/secrets/passwords/ssl_key_store
+      - SSL_KEY_ALIAS=${SSL_KEY_ALIAS}
+      - SSL_KEY_PASSWORD_FILE=/run/secrets/passwords/ssl_key
+      - MYSQL_DATABASE=logging
       - MYSQL_HOST=mysql:3306
       - MYSQL_USERNAME=logging
       - MYSQL_PASSWORD_FILE=/run/secrets/passwords/mysql
     ports:
       - ${LOGGING_PORT}:8080
     secrets:
+      - source: auth0_client_secret
+        target: auth0/client_secret
+      - source: ssl_key_store
+        target: ssl/key_store
+      - source: ssl_key_store_password
+        target: passwords/ssl_key_store
+      - source: ssl_key_password
+        target: passwords/ssl_key
       - source: mysql_password
         target: passwords/mysql
-
   mysql:
     image: mysql:${MYSQL_IMAGE_TAG}
     environment:
@@ -29,6 +45,14 @@ services:
         target: passwords/mysql
 
 secrets:
+  auth0_client_secret:
+    file: /etc/opt/bfi/iiif-logging/${ENVIRONMENT}/secrets/auth0_client_secret
+  ssl_key_store:
+    file: /etc/opt/bfi/iiif-logging/${ENVIRONMENT}/ssl/ssl_key_store
+  ssl_key_store_password:
+    file: /etc/opt/bfi/iiif-logging/${ENVIRONMENT}/secrets/ssl_key_store_password
+  ssl_key_password:
+    file: /etc/opt/bfi/iiif-logging/${ENVIRONMENT}/secrets/ssl_key_password
   mysql_root_password:
     file: /etc/opt/bfi/iiif-logging/${ENVIRONMENT}/secrets/mysql_root_password
   mysql_password:

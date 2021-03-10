@@ -1,0 +1,4 @@
+{
+  "name": "Testing Universal Viewer",
+  "body": "Logs the user in via Auth0 and navigates through the Universal Viewer."
+}

@@ -1,0 +1,14 @@
+{
+  "name": "cypress",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "cypress run --browser chrome"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "cypress": "^6.6.0",
+    "cypress-log-to-output": "^1.1.2",
+    "wait-port": "^0.2.9"
+  }
+}

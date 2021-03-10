@@ -1,3 +1,4 @@
 [submodule "src/main/resources/static"]
 	path = src/main/resources/static
-	url = https://github.com/UniversalViewer/examples.git
+	url = https://github.com/bfidatadigipres/bfi_universal_viewer
+	branch = feat/logging_integration
