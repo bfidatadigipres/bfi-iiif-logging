@@ -31,6 +31,7 @@ class ViewerAuditApplication : WebSecurityConfigurerAdapter() {
             .oauth2Login().userInfoEndpoint {
                 it.oidcUserService(auditUserService)
             }
+            .and().logout().logoutSuccessUrl("/") // This will effectively trigger the auth flow again
             .and().csrf().disable()
     }
 
