@@ -13,6 +13,8 @@ Data and Digital Preservation platform.
 
 ## Build
 
+[![build](https://github.com/bfidatadigipres/bfi-iiif-logging/actions/workflows/build.yml/badge.svg)](https://github.com/bfidatadigipres/bfi-iiif-logging/actions/workflows/build.yml)
+
 The project uses Kotlin and is built using Gradle:
 
 ```bash
@@ -108,6 +110,10 @@ Enable the systemd unit to have the application start at system boot:
 ```bash
 systemctl enable <environment>-iiif-logging
 ```
+
+## Contributors
+
+[![contributors](https://contrib.rocks/image?repo=bfidatadigipres/bfi-iiif-logging)](https://github.com/bfidatadigipres/bfi-iiif-logging/graphs/contributors)
 
 ## License
 
