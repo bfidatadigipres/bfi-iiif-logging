@@ -11,6 +11,11 @@ term auditing and analytics.
 This project is delivered as part of the British Film Institute's wider
 Data and Digital Preservation platform.
 
+The project is built using
+[GitHub Actions](https://github.com/bfidatadigipres/bfi-iiif-load-balancer/actions),
+and the produced containers are persisted in
+[GitHub Container Registry](https://github.com/orgs/bfidatadigipres/packages/container/package/bfi-iiif-load-balancer).
+
 ## Build
 
 [![build](https://github.com/bfidatadigipres/bfi-iiif-logging/actions/workflows/build.yml/badge.svg)](https://github.com/bfidatadigipres/bfi-iiif-logging/actions/workflows/build.yml)
@@ -49,19 +54,19 @@ scoped to a specific environment (e.g. `DEV`, `UAT`, `PROD`, etc):
 - `/etc/`
   - `/opt/bfi/iiif-logging/<environment>/`
     - `secrets/`
-      - Contains the secrets required to run the application, specifically
-        the MySQL password and root password, Java KeyStore passwords and
-        the Auth0 client secret. Note that these are delivered as text
-        files, so that they can be provided as secrets to the Docker Compose
-        manifests.
+      - Contains the secrets required to run the application,
+        specifically the MySQL password and root password, Java KeyStore
+        passwords and the Auth0 client secret. Note that these are
+        delivered as text files, so that they can be provided as secrets
+        to the Docker Compose manifests.
     - `ssl/`
       - Contains any SSL related configuration, specifically the Java
         KeyStore containing the key and certificate for serving the
         application via SSL.
     - `config.env`
-      - A newline separated list of non-secret environment variables, which
-        is provided as an `--env-file` parameter to the `docker-compose`
-        start and stop operations.
+      - A newline separated list of non-secret environment variables,
+        which is provided as an `--env-file` parameter to the
+        `docker-compose` start and stop operations.
   - `/systemd/system/<environment>-iiif-logging.service`
     - A systemd unit used for starting and stopping the application.
       Note that this file must be edited to set the `<environment>`
@@ -114,6 +119,11 @@ systemctl enable <environment>-iiif-logging
 ## Contributors
 
 [![contributors](https://contrib.rocks/image?repo=bfidatadigipres/bfi-iiif-logging)](https://github.com/bfidatadigipres/bfi-iiif-logging/graphs/contributors)
+
+## Versioning
+
+We use SemVer for versioning. For the versions available, see the [tags
+on this repository](https://github.com/bfidatadigipres/bfi-iiif-logging/tags).
 
 ## License
 
