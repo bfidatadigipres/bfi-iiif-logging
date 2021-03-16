@@ -19,6 +19,9 @@ class ViewerAuditApplication : WebSecurityConfigurerAdapter() {
     @Autowired
     lateinit var auditUserService: AuditUserService
 
+    @Autowired
+    lateinit var expiredAuthenticationMatcher: ExpiredAuthenticationSecurityFilter
+
     override fun configure(http: HttpSecurity) {
         http.authorizeRequests()
             .anyRequest().authenticated()
@@ -31,8 +34,12 @@ class ViewerAuditApplication : WebSecurityConfigurerAdapter() {
             .oauth2Login().userInfoEndpoint {
                 it.oidcUserService(auditUserService)
             }
-            .and().logout().logoutSuccessUrl("/") // This will effectively trigger the auth flow again
-            .and().csrf().disable()
+            .and().logout {
+                it.logoutSuccessUrl("/")
+                it.logoutRequestMatcher(expiredAuthenticationMatcher)
+            }
+            // This will effectively trigger the auth flow again
+            .csrf().disable()
     }
 
     @Bean
