@@ -1,5 +1,6 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import de.undercouch.gradle.tasks.download.Download
+import org.springframework.boot.gradle.tasks.run.BootRun
 
 plugins {
     id("org.springframework.boot") version "2.3.9.BUILD-SNAPSHOT"
@@ -7,6 +8,7 @@ plugins {
     kotlin("jvm") version "1.4.30"
     kotlin("plugin.spring") version "1.4.30"
     id("de.undercouch.download") version "4.1.1"
+    jacoco
 }
 
 group = "uk.org.bfi"
@@ -56,6 +58,18 @@ tasks.withType<Test> {
     }
 }
 
+
+val runTask = tasks["bootRun"] as BootRun
+
+jacoco {
+    applyTo(runTask)
+}
+
+val runCoverageTask = tasks.register<JacocoReport>("bootRunCoverage") {
+    executionData(runTask)
+    sourceSets(sourceSets["main"])
+}
+
 val downloadUvBundleTask by tasks.register<Download>("downloadUvBundle") {
     src("https://cdn.jsdelivr.net/npm/universalviewer@3.1.1/dist/uv.zip")
     dest("${projectDir}/src/main/resources/static/uv.zip")
@@ -71,5 +85,9 @@ val unzipUvBundleTask by tasks.register<Copy>("unzipUvBundle") {
 tasks {
     build {
         downloadUvBundleTask
+    }
+
+    bootRun {
+        finalizedBy(runCoverageTask)
     }
 }
