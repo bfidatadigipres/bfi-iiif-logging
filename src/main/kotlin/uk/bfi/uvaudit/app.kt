@@ -11,7 +11,9 @@ import org.springframework.security.web.authentication.HttpStatusEntryPoint
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 import uk.bfi.uvaudit.event.jdbc.JdbcAuditEventWriter
 import uk.bfi.uvaudit.security.AuditUserService
+import uk.bfi.uvaudit.security.filter.ExpiredAuthenticationSecurityFilter
 import javax.sql.DataSource
+
 
 @SpringBootApplication
 class ViewerAuditApplication : WebSecurityConfigurerAdapter() {
