@@ -33,7 +33,7 @@ class ExpiredAuthenticationSecurityFilter(
         .build()
 
     override fun matches(request: HttpServletRequest): Boolean {
-        if (request.pathInfo == "/logout") {
+        if (request.servletPath == "/logout") {
             return true;
         }
 
