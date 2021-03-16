@@ -30,6 +30,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("io.github.microutils:kotlin-logging:1.12.0")
     implementation("org.flywaydb:flyway-core:6.5.7")
+    implementation("com.google.guava:guava:30.1-jre")
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 
