@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.web.authentication.HttpStatusEntryPoint
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
+import org.springframework.security.web.util.matcher.RequestMatcher
 import uk.bfi.uvaudit.event.jdbc.JdbcAuditEventWriter
 import uk.bfi.uvaudit.security.AuditUserService
 import uk.bfi.uvaudit.security.filter.ExpiredAuthenticationSecurityFilter
@@ -22,7 +23,7 @@ class ViewerAuditApplication : WebSecurityConfigurerAdapter() {
     lateinit var auditUserService: AuditUserService
 
     @Autowired
-    lateinit var expiredAuthenticationMatcher: ExpiredAuthenticationSecurityFilter
+    lateinit var expiredAuthenticationMatcher: RequestMatcher
 
     override fun configure(http: HttpSecurity) {
         http.authorizeRequests()
