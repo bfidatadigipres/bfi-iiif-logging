@@ -11,6 +11,7 @@ import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken
 import org.springframework.security.web.util.matcher.RequestMatcher
 import org.springframework.stereotype.Component
+import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.client.getForEntity
 import java.time.Duration
@@ -53,13 +54,16 @@ class ExpiredAuthenticationSecurityFilter(
             ctx.execute(req, body)
         }
 
-        val userInfoResponse = template.getForEntity<String>("https://${domain}/userinfo")
-        if (userInfoResponse.statusCode != HttpStatus.OK) {
-            // Log the user out if fetching userinfo returned an error
-            return true
-        }
+        try {
+            val userInfoResponse = template.getForEntity<String>("https://${domain}/userinfo")
+            if (userInfoResponse.statusCode != HttpStatus.OK) {
+                cache.put(accessToken, UserInfo.parse(userInfoResponse.body))
+                return true
+            }
 
-        cache.put(accessToken, UserInfo.parse(userInfoResponse.body))
-        return false
+            return false
+        } catch (ex: HttpClientErrorException) {
+            return false
+        }
     }
 }
