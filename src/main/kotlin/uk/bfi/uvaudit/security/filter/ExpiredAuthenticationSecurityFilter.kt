@@ -3,6 +3,7 @@ package uk.bfi.uvaudit.security.filter
 import com.google.common.cache.Cache
 import com.google.common.cache.CacheBuilder
 import com.nimbusds.openid.connect.sdk.claims.UserInfo
+import mu.KotlinLogging
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.context.SecurityContextHolder
@@ -24,6 +25,7 @@ class ExpiredAuthenticationSecurityFilter(
     @Value("#{environment.AUTH0_DOMAIN}") val domain: String,
     @Value("#{environment.AUTH0_USERINFO_TTL ?: 20}") val tokenTtl: Long
 ) : RequestMatcher {
+    private val logger = KotlinLogging.logger {}
 
     private val cache: Cache<String, UserInfo> = CacheBuilder
         .newBuilder()
@@ -57,13 +59,14 @@ class ExpiredAuthenticationSecurityFilter(
         try {
             val userInfoResponse = template.getForEntity<String>("https://${domain}/userinfo")
             if (userInfoResponse.statusCode != HttpStatus.OK) {
-                cache.put(accessToken, UserInfo.parse(userInfoResponse.body))
                 return true
             }
 
+            cache.put(accessToken, UserInfo.parse(userInfoResponse.body))
             return false
         } catch (ex: HttpClientErrorException) {
-            return false
+            logger.warn("Unable to fetch userinfo for client", ex)
+            return true
         }
     }
 }
