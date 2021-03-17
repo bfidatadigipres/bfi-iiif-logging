@@ -31,6 +31,8 @@ services:
         target: passwords/mysql
   mysql:
     image: mysql:${MYSQL_IMAGE_TAG}
+    ports:
+      - ${MYSQL_PORT}:3306
     environment:
       - MYSQL_DATABASE=logging
       - MYSQL_USER=logging
