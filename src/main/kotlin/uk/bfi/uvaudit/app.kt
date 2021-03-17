@@ -1,6 +1,7 @@
 package uk.bfi.uvaudit
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
@@ -9,15 +10,24 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.web.authentication.HttpStatusEntryPoint
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
+import org.springframework.security.web.util.matcher.RequestMatcher
 import uk.bfi.uvaudit.event.jdbc.JdbcAuditEventWriter
 import uk.bfi.uvaudit.security.AuditUserService
+import uk.bfi.uvaudit.security.filter.ExpiredAuthenticationSecurityFilter
 import javax.sql.DataSource
 
 @SpringBootApplication
-class ViewerAuditApplication : WebSecurityConfigurerAdapter() {
+class ViewerAuditApplication(
+    @Value("#{environment.AUTH0_DOMAIN}") val auth0Domain: String,
+    @Value("#{environment.AUTH0_CLIENT_ID}") val auth0ClientId: String,
+    @Value("#{environment.LOGGING_HOSTNAME ?: 'localhost'}") val loggingHostname: String
+) : WebSecurityConfigurerAdapter() {
 
     @Autowired
     lateinit var auditUserService: AuditUserService
+
+    @Autowired
+    lateinit var expiredAuthenticationMatcher: RequestMatcher
 
     override fun configure(http: HttpSecurity) {
         http.authorizeRequests()
@@ -31,8 +41,12 @@ class ViewerAuditApplication : WebSecurityConfigurerAdapter() {
             .oauth2Login().userInfoEndpoint {
                 it.oidcUserService(auditUserService)
             }
-            .and().logout().logoutSuccessUrl("/") // This will effectively trigger the auth flow again
-            .and().csrf().disable()
+            .and().logout {
+                it.logoutSuccessUrl("https://${auth0Domain}/v2/logout?returnTo=https://${loggingHostname}&client_id=${auth0ClientId}")
+                it.logoutRequestMatcher(expiredAuthenticationMatcher)
+            }
+            // This will effectively trigger the auth flow again
+            .csrf().disable()
     }
 
     @Bean
