@@ -65,7 +65,7 @@ internal class AuditEventControllerTests {
     fun setup() {
         val template = NamedParameterJdbcTemplate(ds)
         template.update(
-            "INSERT INTO user (sub) VALUES ('test@user.com') ON DUPLICATE KEY UPDATE id = id",
+            "INSERT INTO user (sub, email, department) VALUES ('auth0|abc123', 'test@example.com', 'IT') ON DUPLICATE KEY UPDATE id = id",
             emptyMap<String, Any>()
         )
     }
@@ -82,7 +82,7 @@ internal class AuditEventControllerTests {
                 """
 
                 with(oauth2Login().attributes {
-                    mapOf("sub" to "test@user.com")
+                    mapOf("sub" to "auth0|abc123")
                 })
             }
             .andExpect { status { isBadRequest } }
