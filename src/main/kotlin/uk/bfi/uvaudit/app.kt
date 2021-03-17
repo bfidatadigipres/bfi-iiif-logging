@@ -19,7 +19,7 @@ import javax.sql.DataSource
 @SpringBootApplication
 class ViewerAuditApplication(
     @Value("#{environment.AUTH0_DOMAIN}") val auth0Domain: String,
-    @Value("#{environment.LOGGING_HOSTNAME ?: localhost}") val loggingHostname: String
+    @Value("#{environment.LOGGING_HOSTNAME ?: 'localhost'}") val loggingHostname: String
 ) : WebSecurityConfigurerAdapter() {
 
     @Autowired
