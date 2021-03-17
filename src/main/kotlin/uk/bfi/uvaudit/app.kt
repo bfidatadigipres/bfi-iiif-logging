@@ -1,6 +1,7 @@
 package uk.bfi.uvaudit
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
@@ -15,9 +16,11 @@ import uk.bfi.uvaudit.security.AuditUserService
 import uk.bfi.uvaudit.security.filter.ExpiredAuthenticationSecurityFilter
 import javax.sql.DataSource
 
-
 @SpringBootApplication
-class ViewerAuditApplication : WebSecurityConfigurerAdapter() {
+class ViewerAuditApplication(
+    @Value("#{environment.AUTH0_DOMAIN}") val auth0Domain: String,
+    @Value("#{environment.LOGGING_HOSTNAME}") val loggingHostname: String
+) : WebSecurityConfigurerAdapter() {
 
     @Autowired
     lateinit var auditUserService: AuditUserService
@@ -38,7 +41,7 @@ class ViewerAuditApplication : WebSecurityConfigurerAdapter() {
                 it.oidcUserService(auditUserService)
             }
             .and().logout {
-                it.logoutSuccessUrl("/")
+                it.logoutSuccessUrl("https://${auth0Domain}/v2/logout?returnTo=https://${loggingHostname}")
                 it.logoutRequestMatcher(expiredAuthenticationMatcher)
             }
             // This will effectively trigger the auth flow again

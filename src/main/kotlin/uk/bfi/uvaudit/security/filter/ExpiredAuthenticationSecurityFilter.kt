@@ -18,18 +18,18 @@ import org.springframework.web.client.getForEntity
 import java.time.Duration
 import javax.servlet.http.HttpServletRequest
 
-
 @Component
 class ExpiredAuthenticationSecurityFilter(
     val clients: OAuth2AuthorizedClientService,
-    @Value("#{environment.AUTH0_DOMAIN}") val domain: String,
-    @Value("#{environment.AUTH0_USERINFO_TTL ?: 20}") val tokenTtl: Long
+    @Value("#{environment.AUTH0_DOMAIN}") val auth0Domain: String,
+    @Value("#{environment.AUTH0_USERINFO_TTL ?: 20}") val cacheTtl: Long
 ) : RequestMatcher {
+
     private val logger = KotlinLogging.logger {}
 
     private val cache: Cache<String, UserInfo> = CacheBuilder
         .newBuilder()
-        .expireAfterWrite(Duration.ofSeconds(tokenTtl))
+        .expireAfterWrite(Duration.ofSeconds(cacheTtl))
         .build()
 
     override fun matches(request: HttpServletRequest): Boolean {
@@ -57,7 +57,7 @@ class ExpiredAuthenticationSecurityFilter(
         }
 
         try {
-            val userInfoResponse = template.getForEntity<String>("https://${domain}/userinfo")
+            val userInfoResponse = template.getForEntity<String>("https://${auth0Domain}/userinfo")
             if (userInfoResponse.statusCode != HttpStatus.OK) {
                 return true
             }
@@ -65,7 +65,7 @@ class ExpiredAuthenticationSecurityFilter(
             cache.put(accessToken, UserInfo.parse(userInfoResponse.body))
             return false
         } catch (ex: HttpClientErrorException) {
-            logger.warn("Unable to fetch userinfo for client", ex)
+            logger.warn("Unable to fetch UserInfo for access token [${client.accessToken.tokenValue}]", ex.message)
             return true
         }
     }
