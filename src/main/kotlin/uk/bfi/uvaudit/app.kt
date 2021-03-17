@@ -19,6 +19,7 @@ import javax.sql.DataSource
 @SpringBootApplication
 class ViewerAuditApplication(
     @Value("#{environment.AUTH0_DOMAIN}") val auth0Domain: String,
+    @Value("#{environment.AUTH0_CLIENT_ID}") val auth0ClientId: String,
     @Value("#{environment.LOGGING_HOSTNAME ?: 'localhost'}") val loggingHostname: String
 ) : WebSecurityConfigurerAdapter() {
 
@@ -41,7 +42,7 @@ class ViewerAuditApplication(
                 it.oidcUserService(auditUserService)
             }
             .and().logout {
-                it.logoutSuccessUrl("https://${auth0Domain}/v2/logout?returnTo=https://${loggingHostname}")
+                it.logoutSuccessUrl("https://${auth0Domain}/v2/logout?returnTo=https://${loggingHostname}&client_id=${auth0ClientId}")
                 it.logoutRequestMatcher(expiredAuthenticationMatcher)
             }
             // This will effectively trigger the auth flow again
