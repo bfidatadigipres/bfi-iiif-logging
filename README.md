@@ -2,21 +2,99 @@
 
 ## Introduction
 
-This project contains an implementation of the
-[Universal Viewer](https://universalviewer.io/) served by a Kotlin
-backend, which logs interactions with the Universal Viewer (and thus,
-the underlying IIIF manifests and images) in a MySQL database for long
-term auditing and analytics.
+This project contains an implementation of a Kotlin server, which logs
+interactions users make with BFI's IIIF resources into a MySQL database
+for long term auditing and analytics.
 
-This project is delivered as part of the British Film Institute's wider
-Data and Digital Preservation platform.
+Specifically, the project references as a Git Submodule BFI's fork of
+the
+[Universal Viewer](https://github.com/bfidatadigipres/bfi_universal_viewer),
+which itself contains the necessary customisations to call the servers
+`/api/event` endpoint on certain events. The Universal Viewer is then
+available via the root resource path `/` on the running server.
+
+To track individual users, the Kotlin server integrates with
+[Auth0](https://auth0.com/) via OAuth 2.0 / OpenID and requires users to
+authenticate before they are able to access the Universal Viewer.
 
 The project is built using
 [GitHub Actions](https://github.com/bfidatadigipres/bfi-iiif-load-balancer/actions),
 and the produced containers are persisted in
 [GitHub Container Registry](https://github.com/orgs/bfidatadigipres/packages/container/package/bfi-iiif-load-balancer).
 
-## Build
+## Getting Started
+
+### Repository Layout
+
+The repository is split into the following components:
+
+- [`Dockerfile`](Dockerfile) and [`docker/`](docker/)
+  - This image contains the compiled Kotlin server application, bundled
+    with the Universal Viewer modifications pulled from the forked
+    GitHub repository. It exposes port `8080` for HTTP / HTTPS access.
+  - A running instance of the container requires a number of environment
+    variables to be provided, containing the necessary configuration.
+- [`infra/`](infra/)
+  - Contains Terraform which drives the configuration of the Auth0
+    tenants.
+- [`src/`](src/)
+  - Contains the Kotlin source code and associated resources, plus
+    testing configurations.
+- [`ssl/`](ssl/)
+  - Contains SSL and TLS related assets, including the Java KeyStore
+    containing the required key and certificates for the Kotlin servers
+    SSL configuration, and the required passphrases to access both the
+    KeyStore and the key contained within it.
+- [`deploy`](deploy/)
+  - Contains the folder structure and configuration files required to
+    deploy the load balancer. Specifically:
+    - [`/etc/opt/bfi/iiif-logging/<environment>/`](deploy/etc/opt/bfi/iiif-logging/<environment>/):
+      contains configuration files and assets used by the logging
+      platform.
+    - [`/etc/systemd/system/<environment>-iiif-logging.service`](deploy/etc/systemd/system/iiif-load-balancer.service):
+      the systemd unit used for starting and stopping the underlying
+      Kotlin server.
+    - [`/opt/bfi/iiif-logging/<environment>/docker-compose.yml`](deploy/opt/bfi/iiif-logging/<environment>/docker-compose.yml):
+      the Docker Compose manifest, defining the logging platform
+      application, dependencies and relationships therein.
+    - [`/var/opt/bfi/iiif-logging/<environment>/mounts`](deploy/var/opt/bfi/iiif-logging/<environment>/mounts):
+      directory where the various mounted volumes used by the containers
+      are located.
+
+### Secrets Management
+
+All secrets checked in as part of the repository have been encrypted
+using [git-secret.io](https://git-secret.io/). This includes the
+contents of the
+[`ssl`](https://github.com/bfidatadigipres/bfi-iiif-logging/blob/master/ssl)
+directory, which contains various SSL / TLS related certificates and
+keys.
+
+Existing users who already exist in the keyring can decrypt secrets with
+the following command:
+
+```bash
+git secret reveal
+```
+
+To decrypt secrets, you must first be added to the keyring by an
+existing user (assuming a key for `some.user@example.com` already exists
+in your local GPG keyring):
+
+```bash
+git secret reveal
+git secret tell some.user@example.com
+git secret hide
+```
+
+New secrets can be added with the following commands:
+
+```bash
+git secret add path/to/my/secret.txt
+git secret hide
+```
+
+## Building
 
 [![build](https://github.com/bfidatadigipres/bfi-iiif-logging/actions/workflows/build.yml/badge.svg)](https://github.com/bfidatadigipres/bfi-iiif-logging/actions/workflows/build.yml)
 
@@ -43,46 +121,9 @@ run, and expose the application:
 docker-compose --file docker-compose.dev.yml up --build --remove-orphans
 ```
 
-## Deployment
-
-### Installation
-
-The [`deploy/`](deploy/) directory contains a directory hierarchy and
-configuration files required for a deployment to a Linux environment,
-scoped to a specific environment (e.g. `DEV`, `UAT`, `PROD`, etc):
-
-- `/etc/`
-  - `/opt/bfi/iiif-logging/<environment>/`
-    - `secrets/`
-      - Contains the secrets required to run the application,
-        specifically the MySQL password and root password, Java KeyStore
-        passwords and the Auth0 client secret. Note that these are
-        delivered as text files, so that they can be provided as secrets
-        to the Docker Compose manifests.
-    - `ssl/`
-      - Contains any SSL related configuration, specifically the Java
-        KeyStore containing the key and certificate for serving the
-        application via SSL.
-    - `config.env`
-      - A newline separated list of non-secret environment variables,
-        which is provided as an `--env-file` parameter to the
-        `docker-compose` start and stop operations.
-  - `/systemd/system/<environment>-iiif-logging.service`
-    - A systemd unit used for starting and stopping the application.
-      Note that this file must be edited to set the `<environment>`
-      placeholder.
-- `/opt/bfi/iiif-logging/<environment>/docker-compose.yml`
-  - The Docker Compose manifest which carries out the container
-    orchestration. This also includes the required MySQL instance.
-- `/var/opt/bfi/iiif-logging/<environment>/mounts`
-  - The directory under which any Docker mounts are created. This is
-    used for persisting the MySQL data directory between restarts of the
-    application.
-
-### Configuration
-
-The application (and thus the built Docker image) requires a number of
-environment variables:
+Note that the application requires a number of environment variables,
+which are provided through both the Docker Compose manifest and directly
+/ through environment configuration files:
 
 | Environment Variable          | Description                                                                                                                       |
 |:------------------------------|:----------------------------------------------------------------------------------------------------------------------------------|
@@ -99,22 +140,101 @@ environment variables:
 | `MYSQL_USERNAME`              | The username of the MySQL database, where audit log events are stored.                                                            |
 | `MYSQL_PASSWORD_FILE`         | A text file containing the password of the MySQL database, where audit log events are stored.                                     |
 
-### Starting & Stopping
+## Deployment
 
-Once the requisite installation files from the `deploy/` directory are
-in place, the application can be started and stopped using the given
-systemd unit:
+### Prerequisites
+
+The application requires Docker and Docker Compose. It is recommended
+that these are installed from the official Docker repositories:
+
+- https://docs.docker.com/engine/install/
+- https://docs.docker.com/compose/install/
+
+The application deployment should mirror the contents of the
+[`deploy/`](https://github.com/bfidatadigipres/bfi-iiif-logging/blob/master/deploy)
+directory. Start by creating the necessary directories:
+
+### Deploy Configuration
+
+Deployments are scoped to a specific environment, e.g. `DEV`, `UAT`,
+`PROD` etc. The environment is defined in both the paths to the
+installation configuration (i.e. `<environment>`) and in the
+`config.env` configuration file.
 
 ```bash
-systemctl start <environment>-iiif-logging
-systemctl stop <environment>-iiif-logging
+sudo -i
+mkdir -p /etc/opt/bfi/iiif-logging/<environment>/secrets
+mkdir -p /etc/opt/bfi/iiif-logging/<environment>/ssl
+mkdir -p /opt/bfi/iiif-logging/<environment>
+mkdir -p /var/opt/bfi/iiif-logging/<environment>/mounts
+chmod 775 /var/opt/bfi/iiif-logging/<environment>/mounts
 ```
 
-Enable the systemd unit to have the application start at system boot:
+Create the MySQL database passwords:
+
+```bash
+cat /dev/urandom | tr -dc '_A-Z-a-z-0-9' | head -c${1:-32} > /etc/opt/bfi/iiif-logging/<environment>/secrets/mysql_password
+cat /dev/urandom | tr -dc '_A-Z-a-z-0-9' | head -c${1:-32} > /etc/opt/bfi/iiif-logging/<environment>/secrets/mysql_root_password
+```
+
+Deploy the Java KeyStore and associated passphrase files:
+
+```bash
+cp bk-ci-data4.dpi.bfi.org.uk.p12 /etc/opt/bfi/iiif-logging/<environment>/ssl/ssl_key_store
+cp bk-ci-data4.dpi.bfi.org.uk-key_password /etc/opt/bfi/iiif-logging/<environment>/secrets/ssl_key_password
+cp bk-ci-data4.dpi.bfi.org.uk-key_store_password /etc/opt/bfi/iiif-logging/<environment>/secrets/ssl_key_store_password
+```
+
+Create the Auth0 client secret file:
+
+```bash
+echo '<AUTH0_CLIENT_SECRET>' > /etc/opt/bfi/iiif-logging/<environment>/secrets/auth0_client_secret
+```
+
+Update
+[`/etc/opt/bfi/iiif-logging/<environment>/config.env`](deploy/etc/opt/bfi/iiif-logging/<environment>/config.env)
+to set the desired configuration:
+
+```text
+ENVIRONMENT=prod
+LOGGING_IMAGE_TAG=1.0.0
+LOGGING_HOSTNAME=<LOGGING_HOSTNAME>
+LOGGING_PORT=49001
+AUTH0_DOMAIN=<AUTH0_DOMAIN>
+AUTH0_CLIENT_ID=<AUTH0_CLIENT_ID>
+SSL_KEY_ALIAS=bk-ci-data4.dpi.bfi.org.uk
+MYSQL_IMAGE_TAG=8.0.23
+MYSQL_PORT=49011
+```
+
+Add the Docker Compose manfiest:
+
+```bash
+cp docker-compose.yml /opt/bfi/iiif-logging/<environment>
+```
+
+Add the systemd unit:
+
+```bash
+cp <environment>-iiif-logging.service /etc/systemd/system
+```
+
+### Start Load Balancer
+
+Enable the systemd unit to start at boot:
 
 ```bash
 systemctl enable <environment>-iiif-logging
 ```
+
+Start the load balancer:
+
+```bash
+systemctl start <environment>-iiif-logging
+```
+
+The Kotlin server can now be accessed on port `49001`.
+
 
 ## Contributors
 
