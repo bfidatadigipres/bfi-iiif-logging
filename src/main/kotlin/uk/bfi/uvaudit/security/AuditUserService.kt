@@ -1,7 +1,6 @@
 package uk.bfi.uvaudit.security
 
-import org.springframework.dao.EmptyResultDataAccessException
-import org.springframework.dao.IncorrectResultSizeDataAccessException
+import org.springframework.dao.support.DataAccessUtils
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.jdbc.support.GeneratedKeyHolder
@@ -21,9 +20,8 @@ class AuditUserService(
     @Throws(OAuth2AuthenticationException::class)
     override fun loadUser(userRequest: OidcUserRequest): AuditUser {
         val oidcUser = delegate.loadUser(userRequest)
-        with(fetchUser(oidcUser)) {
-            return this ?: createUser(oidcUser)
-        }
+        val auditUser = fetchUser(oidcUser)
+        return auditUser?.let { updateUser(oidcUser, it) } ?: createUser(oidcUser)
     }
 
     private fun fetchUser(oidcUser: OidcUser): AuditUser? {
@@ -34,35 +32,42 @@ class AuditUserService(
 
         val dbUserIds = jdbcTemplate.queryForList(sql, params, Long::class.java)
 
-        return when {
-            dbUserIds.isEmpty() -> {
-                null
-            }
-            dbUserIds.size == 1 -> {
-                AuditUser(dbUserIds[0], oidcUser)
-            }
-            else -> {
-                throw IncorrectResultSizeDataAccessException(0, dbUserIds.size)
-            }
-        }
+        return DataAccessUtils.uniqueResult(dbUserIds)?.let { AuditUser(it, oidcUser) }
     }
 
     private fun createUser(oidcUser: OidcUser): AuditUser {
-        val sql = "INSERT INTO user (sub) VALUES (:sub)"
+        val sql = "INSERT INTO user (sub, email, department) VALUES (:sub, :email, :department)"
         val params = MapSqlParameterSource(
-            mapOf("sub" to oidcUser.subject)
+            mapOf(
+                "sub" to oidcUser.subject,
+                "email" to oidcUser.email,
+                "department" to extractDepartmentClaim(oidcUser)
+            )
         )
         val keyHolder = GeneratedKeyHolder()
 
         jdbcTemplate.update(sql, params, keyHolder)
 
-        return when (keyHolder.key) {
-            null -> {
-                throw EmptyResultDataAccessException(1)
-            }
-            else -> {
-                AuditUser(keyHolder.key!!.toLong(), oidcUser)
-            }
-        }
+        return AuditUser(keyHolder.key!!.toLong(), oidcUser)
+    }
+
+    private fun updateUser(oidcUser: OidcUser, auditUser: AuditUser): AuditUser {
+        val sql = "UPDATE user SET email = :email, department = :department WHERE id = :id"
+        val params = MapSqlParameterSource(
+            mapOf(
+                "email" to oidcUser.email,
+                "department" to extractDepartmentClaim(oidcUser),
+                "id" to auditUser.id
+            )
+        )
+
+        jdbcTemplate.update(sql, params)
+
+        return AuditUser(auditUser.id, oidcUser)
+    }
+
+    private fun extractDepartmentClaim(oidcUser: OidcUser): String? {
+        val customClaims = oidcUser.getClaimAsMap("https://bfi.org.uk/")
+        return customClaims?.get("department") as String?
     }
 }
