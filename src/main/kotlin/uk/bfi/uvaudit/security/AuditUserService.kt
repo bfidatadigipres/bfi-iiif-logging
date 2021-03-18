@@ -21,11 +21,7 @@ class AuditUserService(
     override fun loadUser(userRequest: OidcUserRequest): AuditUser {
         val oidcUser = delegate.loadUser(userRequest)
         val auditUser = fetchUser(oidcUser)
-        return if (auditUser == null) {
-            createUser(oidcUser)
-        } else {
-            updateUser(oidcUser, auditUser)
-        }
+        return auditUser?.let { updateUser(oidcUser, it) } ?: createUser(oidcUser)
     }
 
     private fun fetchUser(oidcUser: OidcUser): AuditUser? {
@@ -35,13 +31,8 @@ class AuditUserService(
         )
 
         val dbUserIds = jdbcTemplate.queryForList(sql, params, Long::class.java)
-        val userId = DataAccessUtils.uniqueResult(dbUserIds)
 
-        return if (userId != null) {
-            AuditUser(userId, oidcUser)
-        } else {
-            null
-        }
+        return DataAccessUtils.uniqueResult(dbUserIds)?.let { AuditUser(it, oidcUser) }
     }
 
     private fun createUser(oidcUser: OidcUser): AuditUser {
@@ -77,10 +68,6 @@ class AuditUserService(
 
     private fun extractDepartmentClaim(oidcUser: OidcUser): String? {
         val customClaims = oidcUser.getClaimAsMap("https://bfi.org.uk/")
-        return if (customClaims == null) {
-            null
-        } else {
-            customClaims["department"] as String?
-        }
+        return customClaims?.get("department") as String?
     }
 }
