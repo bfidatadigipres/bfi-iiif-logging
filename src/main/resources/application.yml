@@ -1,5 +1,9 @@
 server:
   forward-headers-strategy: native
+  servlet:
+    session:
+      cookie:
+        domain: ${COOKIE_DOMAIN}
   ssl:
     enabled: ${SSL_ENABLED}
     key-store-type: PKCS12

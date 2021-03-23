@@ -1,6 +1,6 @@
 # /etc/systemd/system/iiif-logging.service
 [Unit]
-Description=IIIF Logging Service
+Description=IIIF Logging Service - <environment>
 After=docker.service
 
 [Service]

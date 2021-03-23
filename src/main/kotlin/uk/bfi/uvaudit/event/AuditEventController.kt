@@ -31,4 +31,14 @@ class AuditEventController(
     fun onEvent(@AuthenticationPrincipal user: AuditUser, @RequestBody event: AuditEvent) {
         writer.write(user.id, event)
     }
+
+    @GetMapping("/api/request")
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    fun onRequest(
+        @AuthenticationPrincipal user: AuditUser,
+        @RequestHeader("X-API-RequestURI") requestUri: String,
+        @RequestHeader("X-API-RequestType") requestType: String
+    ) {
+        logger.info { "Got [$requestType] with [$requestUri]" }
+    }
 }
