@@ -3,7 +3,7 @@ FROM openjdk:11-jdk AS build
 RUN mkdir -p /build
 COPY . /build
 WORKDIR /build
-RUN ./gradlew unzipUvBundle assemble --no-daemon
+RUN ./gradlew unzipUvBundle assemble --no-daemon -x test
 
 FROM openjdk:11-jre-slim
 LABEL org.opencontainers.image.source=https://github.com/bfidatadigipres/bfi-iiif-logging

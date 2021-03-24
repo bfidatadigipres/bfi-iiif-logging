@@ -70,7 +70,7 @@ internal class AuditEventControllerTests {
         )
     }
 
-    //@Test
+    @Test
     fun `should return bad request on invalid audit event`() {
         mockMvc
             .post("/api/event") {
