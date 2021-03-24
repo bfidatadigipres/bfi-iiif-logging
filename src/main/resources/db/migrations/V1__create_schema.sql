@@ -14,8 +14,8 @@ CREATE TABLE `audit_event`
     `event_type`   VARCHAR(20) NOT NULL,
     PRIMARY KEY (`id`),
     KEY `fk_audit_event_user_idx` (`user_id`),
-    CONSTRAINT `fk_audit_event_user` FOREIGN KEY (`user_id`)
-        REFERENCES `user` (`id`)
+    CONSTRAINT `fk_audit_event_user` FOREIGN KEY (`user_id`) REFERENCES `user`
+        (`id`)
 );
 
 CREATE TABLE `download_panel_opened`
@@ -26,8 +26,8 @@ CREATE TABLE `download_panel_opened`
     `canvas_id`      VARCHAR(2048) NOT NULL,
     PRIMARY KEY (`id`),
     KEY `fk_download_panel_opened_audit_event_idx` (`audit_event_id`),
-    CONSTRAINT `fk_download_panel_opened_audit_event` FOREIGN KEY (`audit_event_id`)
-        REFERENCES `audit_event` (`id`)
+    CONSTRAINT `fk_download_panel_opened_audit_event` FOREIGN KEY (
+                                                                   `audit_event_id`) REFERENCES `audit_event` (`id`)
 );
 
 CREATE TABLE `image_changed`
