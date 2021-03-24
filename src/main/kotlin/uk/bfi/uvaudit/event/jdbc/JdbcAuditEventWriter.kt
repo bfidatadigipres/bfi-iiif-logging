@@ -13,25 +13,35 @@ class JdbcAuditEventWriter(dataSource: DataSource) : AuditEventWriter {
 
     private val template = NamedParameterJdbcTemplate(dataSource)
 
-    override fun write(user: Long, event: AuditEvent) {
-        val parentRecord = createAuditEventParentRecord(user, event)
-        when (event) {
-            is AuditEvent.DownloadPanelOpened -> writeDownloadPanelEvent(parentRecord, event)
-            is AuditEvent.ImageChanged -> writeImageChangedEvent(parentRecord, event)
-            is AuditEvent.ResourceLoaded -> writeResourceLoadedEvent(parentRecord, event)
+    override fun write(userId: Long, auditEvent: AuditEvent) {
+        val auditLogId = createAndGetAuditLogId(userId, "event_$auditEvent.type")
+        when (auditEvent) {
+            is AuditEvent.DownloadPanelOpened -> writeDownloadPanelEvent(auditLogId, auditEvent)
+            is AuditEvent.ImageChanged -> writeImageChangedEvent(auditLogId, auditEvent)
+            is AuditEvent.ResourceLoaded -> writeResourceLoadedEvent(auditLogId, auditEvent)
         }
     }
 
-    private fun createAuditEventParentRecord(userId: Long, event: AuditEvent): Long {
-        val sql = """INSERT INTO audit_event
-                (user_id, created_date, event_type)
+    override fun write(userId: Long, requestType: String, requestUri: String) {
+        val auditLogId = createAndGetAuditLogId(userId, "request_$requestType");
+        when (requestType) {
+            "manifest" -> writeManifestRequest(auditLogId, requestUri)
+            "image" -> writeImageRequest(auditLogId, requestUri)
+            else -> throw Exception("Unexpected request type [$requestType]")
+        }
+    }
+
+    private fun createAndGetAuditLogId(userId: Long, logType: String): Long {
+        val sql = """
+            INSERT INTO audit_log
+                (user_id, created_date, log_type)
             VALUES
-                (:user_id, :created_date, :event_type)"""
+                (:user_id, :created_date, :log_type)"""
         val params = MapSqlParameterSource(
             mapOf(
                 "user_id" to userId,
                 "created_date" to Date(),
-                "event_type" to event.type
+                "log_type" to logType
             )
         )
         val keyHolder = GeneratedKeyHolder()
@@ -48,50 +58,84 @@ class JdbcAuditEventWriter(dataSource: DataSource) : AuditEventWriter {
         }
     }
 
-    private fun writeDownloadPanelEvent(parentRecord: Long, event: AuditEvent.DownloadPanelOpened) {
+    private fun writeDownloadPanelEvent(auditLogId: Long, auditEvent: AuditEvent.DownloadPanelOpened) {
         val sql = """
-            INSERT INTO download_panel_opened
-                (audit_event_id, manifest, canvas_id)
+            INSERT INTO event_download_panel_opened
+                (audit_log_id, manifest, canvas_id)
             VALUES
-                (:audit_event_id, :manifest, :canvas_id)"""
+                (:audit_log_id, :manifest, :canvas_id)"""
         val params = MapSqlParameterSource(
             mapOf(
-                "audit_event_id" to parentRecord,
-                "manifest" to event.manifest,
-                "canvas_id" to event.canvas
+                "audit_log_id" to auditLogId,
+                "manifest" to auditEvent.manifest,
+                "canvas_id" to auditEvent.canvas
             )
         )
 
         template.update(sql, params)
     }
 
-    private fun writeResourceLoadedEvent(parentRecord: Long, event: AuditEvent.ResourceLoaded) {
+    private fun writeResourceLoadedEvent(auditLogId: Long, auditEvent: AuditEvent.ResourceLoaded) {
         val sql = """
-            INSERT INTO resource_loaded
-                (audit_event_id, uri)
+            INSERT INTO event_resource_loaded
+                (audit_log_id, uri)
             VALUES
-                (:audit_event_id, :uri)"""
+                (:audit_log_id, :uri)"""
         val params = MapSqlParameterSource(
             mapOf(
-                "audit_event_id" to parentRecord,
-                "uri" to event.uri,
+                "audit_log_id" to auditLogId,
+                "uri" to auditEvent.uri,
             )
         )
 
         template.update(sql, params)
     }
 
-    private fun writeImageChangedEvent(parentRecord: Long, event: AuditEvent.ImageChanged) {
+    private fun writeImageChangedEvent(auditLogId: Long, auditEvent: AuditEvent.ImageChanged) {
         val sql = """
-            INSERT INTO image_changed
-                (audit_event_id, manifest, canvas_id)
+            INSERT INTO event_image_changed
+                (audit_log_id, manifest, canvas_id)
             VALUES
-                (:audit_event_id, :manifest, :canvas_id)"""
+                (:audit_log_id, :manifest, :canvas_id)"""
         val params = MapSqlParameterSource(
             mapOf(
-                "audit_event_id" to parentRecord,
-                "manifest" to event.manifest,
-                "canvas_id" to event.canvas
+                "audit_log_id" to auditLogId,
+                "manifest" to auditEvent.manifest,
+                "canvas_id" to auditEvent.canvas
+            )
+        )
+
+        template.update(sql, params)
+    }
+
+    private fun writeManifestRequest(auditLogId: Long, manifest: String) {
+        val sql = """
+            INSERT INTO request_manifest
+                (audit_log_id, manifest)
+            VALUES
+                (:audit_log_id, :manifest)
+        """
+        val params = MapSqlParameterSource(
+            mapOf(
+                "audit_log_id" to auditLogId,
+                "manifest" to manifest
+            )
+        )
+
+        template.update(sql, params)
+    }
+
+    private fun writeImageRequest(auditLogId: Long, image: String) {
+        val sql = """
+            INSERT INTO request_image
+                (audit_log_id, image)
+            VALUES
+                (:audit_log_id, :image)
+        """
+        val params = MapSqlParameterSource(
+            mapOf(
+                "audit_log_id" to auditLogId,
+                "image" to image
             )
         )
 
