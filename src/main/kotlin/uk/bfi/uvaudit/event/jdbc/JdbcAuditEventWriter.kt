@@ -14,7 +14,7 @@ class JdbcAuditEventWriter(dataSource: DataSource) : AuditEventWriter {
     private val template = NamedParameterJdbcTemplate(dataSource)
 
     override fun write(userId: Long, auditEvent: AuditEvent) {
-        val auditLogId = createAndGetAuditLogId(userId, "event_$auditEvent.type")
+        val auditLogId = createAndGetAuditLogId(userId, "event_${auditEvent.type}")
         when (auditEvent) {
             is AuditEvent.DownloadPanelOpened -> writeDownloadPanelEvent(auditLogId, auditEvent)
             is AuditEvent.ImageChanged -> writeImageChangedEvent(auditLogId, auditEvent)
