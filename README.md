@@ -47,7 +47,7 @@ The repository is split into the following components:
     KeyStore and the key contained within it.
 - [`deploy`](deploy/)
   - Contains the folder structure and configuration files required to
-    deploy the load balancer. Specifically:
+    deploy the logging platform. Specifically:
     - [`/etc/opt/bfi/iiif-logging/<environment>/`](deploy/etc/opt/bfi/iiif-logging/<environment>/):
       contains configuration files and assets used by the logging
       platform.
@@ -207,7 +207,7 @@ MYSQL_IMAGE_TAG=8.0.23
 MYSQL_PORT=49011
 ```
 
-Add the Docker Compose manfiest:
+Add the Docker Compose manifest:
 
 ```bash
 cp docker-compose.yml /opt/bfi/iiif-logging/<environment>
@@ -234,7 +234,6 @@ systemctl start <environment>-iiif-logging
 ```
 
 The Kotlin server can now be accessed on port `49001`.
-
 
 ## Contributors
 
