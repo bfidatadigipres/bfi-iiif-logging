@@ -1,4 +1,4 @@
 [submodule "src/main/resources/static"]
 	path = src/main/resources/static
-	url = https://github.com/bfidatadigipres/bfi_universal_viewer
-	branch = master
+	url = https://github.com/stephenwf/bfi_universal_viewer
+	branch = feat/with-credentials
