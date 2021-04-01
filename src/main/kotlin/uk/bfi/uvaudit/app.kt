@@ -35,7 +35,7 @@ class ViewerAuditApplication(
             .and().exceptionHandling {
                 it.defaultAuthenticationEntryPointFor(
                     HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED),
-                    AntPathRequestMatcher("api/**")
+                    AntPathRequestMatcher("/api/**")
                 )
             }
             .oauth2Login().userInfoEndpoint {
