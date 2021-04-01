@@ -4,6 +4,7 @@ server:
     session:
       cookie:
         domain: ${COOKIE_DOMAIN}
+      timeout: ${SESSION_TIMEOUT}
   ssl:
     enabled: ${SSL_ENABLED}
     key-store-type: PKCS12
