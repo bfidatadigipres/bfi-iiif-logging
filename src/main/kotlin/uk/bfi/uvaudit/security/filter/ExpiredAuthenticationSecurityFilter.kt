@@ -30,6 +30,8 @@ class ExpiredAuthenticationSecurityFilter(
     private val cache: Cache<String, UserInfo> = CacheBuilder
         .newBuilder()
         .expireAfterWrite(Duration.ofSeconds(cacheTtl))
+        .weakKeys() // Keys can be compared using '=='
+        .removalListener<String, UserInfo> { logger.info("Key [${it.key}] was evicted from cache: [${it.cause}]") }
         .build()
 
     override fun matches(request: HttpServletRequest): Boolean {
@@ -47,8 +49,11 @@ class ExpiredAuthenticationSecurityFilter(
         val accessToken = client.accessToken.tokenValue
         if (cache.getIfPresent(accessToken) != null) {
             // Token is still valid and in the cache, don't log the user out
+            logger.info("Cache hit for key [${accessToken}]")
             return false
         }
+
+        logger.info("Cache miss for key [${accessToken}]")
 
         val template = RestTemplate()
         template.interceptors.add { req, body, ctx ->
@@ -63,6 +68,7 @@ class ExpiredAuthenticationSecurityFilter(
             }
 
             cache.put(accessToken, UserInfo.parse(userInfoResponse.body))
+            logger.info("Cache put for key [${accessToken}]")
             return false
         } catch (ex: HttpClientErrorException) {
             logger.warn("Unable to fetch UserInfo for access token [${client.accessToken.tokenValue}]", ex.message)
