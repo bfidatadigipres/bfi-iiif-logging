@@ -11,7 +11,11 @@ class LoggingAuditEventWriter : AuditEventWriter {
 
     private val logger = KotlinLogging.logger {}
 
-    override fun write(user: Long, event: AuditEvent) {
-        logger.info { "User $user sent $event" }
+    override fun write(userId: Long, auditEvent: AuditEvent) {
+        logger.info { "User $userId sent $auditEvent" }
+    }
+
+    override fun write(userId: Long, requestType: String, requestUri: String) {
+        logger.info { "User $userId sent $requestType with URI $requestUri" }
     }
 }

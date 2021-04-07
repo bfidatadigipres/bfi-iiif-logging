@@ -6,5 +6,7 @@ package uk.bfi.uvaudit.event
  */
 interface AuditEventWriter {
 
-    fun write(user: Long, event: AuditEvent)
+    fun write(userId: Long, auditEvent: AuditEvent)
+
+    fun write(userId: Long, requestType: String, requestUri: String)
 }
