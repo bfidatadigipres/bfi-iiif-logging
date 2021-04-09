@@ -1,8 +1,8 @@
 package uk.bfi.uvaudit.security.filter
 
-import com.google.common.cache.Cache
 import com.google.common.cache.CacheBuilder
-import com.nimbusds.openid.connect.sdk.claims.UserInfo
+import com.google.common.cache.CacheLoader
+import com.google.common.cache.LoadingCache
 import mu.KotlinLogging
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpStatus
@@ -12,7 +12,6 @@ import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken
 import org.springframework.security.web.util.matcher.RequestMatcher
 import org.springframework.stereotype.Component
-import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.client.getForEntity
 import java.time.Duration
@@ -27,10 +26,29 @@ class ExpiredAuthenticationSecurityFilter(
 
     private val logger = KotlinLogging.logger {}
 
-    private val cache: Cache<String, UserInfo> = CacheBuilder
+    private val cache: LoadingCache<String, Boolean> = CacheBuilder
         .newBuilder()
         .expireAfterWrite(Duration.ofSeconds(cacheTtl))
-        .build()
+        .weakKeys() // Keys can be compared using '=='
+        .removalListener<String, Boolean> { logger.info("Access token [${it.key}] was evicted from cache: [${it.cause}]") }
+        .build(CacheLoader.from { accessToken: String? -> loadCacheEntry(accessToken) })
+
+    private fun loadCacheEntry(accessToken: String?): Boolean {
+        return try {
+            val restTemplate = RestTemplate()
+            restTemplate.interceptors.add { req, body, ctx ->
+                req.headers["Authorization"] = "Bearer $accessToken"
+                ctx.execute(req, body)
+            }
+
+            val userInfoResponse = restTemplate.getForEntity<String>("https://${auth0Domain}/userinfo")
+            logger.info("Cache put for access token [$accessToken]")
+            userInfoResponse.statusCode != HttpStatus.OK
+        } catch (e: Exception) {
+            logger.error("An error occurred loading cache entry for access token [${accessToken}]", e)
+            true;
+        }
+    }
 
     override fun matches(request: HttpServletRequest): Boolean {
         if (request.servletPath == "/logout") {
@@ -45,28 +63,6 @@ class ExpiredAuthenticationSecurityFilter(
         )
 
         val accessToken = client.accessToken.tokenValue
-        if (cache.getIfPresent(accessToken) != null) {
-            // Token is still valid and in the cache, don't log the user out
-            return false
-        }
-
-        val template = RestTemplate()
-        template.interceptors.add { req, body, ctx ->
-            req.headers["Authorization"] = "Bearer ${client.accessToken.tokenValue}"
-            ctx.execute(req, body)
-        }
-
-        try {
-            val userInfoResponse = template.getForEntity<String>("https://${auth0Domain}/userinfo")
-            if (userInfoResponse.statusCode != HttpStatus.OK) {
-                return true
-            }
-
-            cache.put(accessToken, UserInfo.parse(userInfoResponse.body))
-            return false
-        } catch (ex: HttpClientErrorException) {
-            logger.warn("Unable to fetch UserInfo for access token [${client.accessToken.tokenValue}]", ex.message)
-            return true
-        }
+        return cache.get(accessToken);
     }
 }
