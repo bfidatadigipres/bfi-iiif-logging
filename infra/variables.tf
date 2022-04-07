@@ -22,7 +22,7 @@ locals {
   player_hostnames = {
     prod = "collections-online.dpi.bfi.org.uk"
   }
-  player_base_uri = "https://${local.viewer_hostnames[terraform.workspace]}"
+  player_base_uri = "https://${local.player_hostnames[terraform.workspace]}"
 
   # Auth0
   auth0_tenant_name = "British Film Institute${local.environment_qualifier}"
