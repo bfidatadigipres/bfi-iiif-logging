@@ -4,7 +4,8 @@ resource "auth0_connection" "username_password" {
 
   enabled_clients = [
     auth0_client.dummy_test.id,
-    auth0_client.universal_viewer.id
+    auth0_client.universal_viewer.id,
+    auth0_client.media_player.id
   ]
 
   options {
