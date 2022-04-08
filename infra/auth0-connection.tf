@@ -10,7 +10,7 @@ resource "auth0_connection" "username_password" {
 
   options {
     brute_force_protection = true
-    disable_signup         = true
+    disable_signup         = false
     requires_username      = false
 
     password_policy = var.auth0_password_policy
@@ -33,6 +33,4 @@ resource "auth0_connection" "username_password" {
       size   = var.auth0_password_history_size
     }
   }
-
-
 }

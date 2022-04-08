@@ -23,7 +23,6 @@ resource "auth0_client" "dummy_test" {
 
   lifecycle {
     ignore_changes = [
-      custom_login_page_preview,
       custom_login_page
     ]
   }
@@ -56,7 +55,6 @@ resource "auth0_client" "universal_viewer" {
 
   lifecycle {
     ignore_changes = [
-      custom_login_page_preview,
       custom_login_page
     ]
   }
@@ -89,7 +87,6 @@ resource "auth0_client" "media_player" {
 
   lifecycle {
     ignore_changes = [
-      custom_login_page_preview,
       custom_login_page
     ]
   }
