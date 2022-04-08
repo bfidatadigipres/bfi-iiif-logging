@@ -7,6 +7,7 @@
 exports.onExecutePreUserRegistration = async (event, api) => {
 
     const domain_mappings = {
+        "bfi.org.uk": ["bfi"],
         "uea.ac.uk": ["eafa"],
         "iwm.org.uk": ["iwm"] ,
         "filmlondon.org.uk": ["lsa"],
@@ -18,8 +19,7 @@ exports.onExecutePreUserRegistration = async (event, api) => {
         "brighton.ac.uk": ["sase"] ,
         "plymouth.gov.uk": ["thebox"],
         "hants.gov.uk": ["wfsa"],
-        "yorksj.ac.uk" : ["nefa", "yfa"],
-        "bfi.org.uk": ["bfi"]
+        "yorksj.ac.uk" : ["nefa", "yfa"]
     }
 
     const user_email = event.user.email;
