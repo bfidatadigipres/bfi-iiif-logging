@@ -7,6 +7,8 @@ import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 import uk.bfi.uvaudit.security.AuditUser
+import javax.naming.AuthenticationException
+
 
 @RestController
 class AuditEventController(
@@ -26,9 +28,16 @@ class AuditEventController(
         logger.error("Audit event structure was invalid", ex)
     }
 
+    @ExceptionHandler(AuthenticationException::class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    protected fun handleEmailNotVerified(ex: AuthenticationException) {
+        logger.error("Email address not verified", ex)
+    }
+
     @PostMapping("/api/event")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     fun onEvent(@AuthenticationPrincipal user: AuditUser, @RequestBody event: AuditEvent) {
+        validateUser(user)
         writer.write(user.id, event)
     }
 
@@ -39,6 +48,15 @@ class AuditEventController(
         @RequestHeader("X-API-RequestType") requestType: String,
         @RequestHeader("X-API-RequestURI") requestUri: String
     ) {
+        validateUser(user)
         writer.write(user.id, requestType, requestUri)
+    }
+
+    private fun validateUser(
+        user: AuditUser
+    ) {
+        if (user.getAttribute<Boolean>("email_verified") != true) {
+            throw AuthenticationException("Email address not validated")
+        }
     }
 }
