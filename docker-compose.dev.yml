@@ -26,7 +26,7 @@ services:
     environment:
       - MYSQL_USER=logging
       - MYSQL_PASSWORD=changeme
-      - MySQL_ROOT_PASSWORD=changeme
+      - MYSQL_ROOT_PASSWORD=changeme
       - MYSQL_DATABASE=logging
     volumes:
       - mysql_data:/var/lib/mysql

@@ -8,6 +8,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 import uk.bfi.uvaudit.security.AuditUser
 
+
 @RestController
 class AuditEventController(
     private val writer: AuditEventWriter
@@ -26,9 +27,16 @@ class AuditEventController(
         logger.error("Audit event structure was invalid", ex)
     }
 
+    @ExceptionHandler(EmailNotVerifiedException::class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    protected fun handleEmailNotVerified(ex: EmailNotVerifiedException) {
+        logger.error("Email address not verified", ex)
+    }
+
     @PostMapping("/api/event")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     fun onEvent(@AuthenticationPrincipal user: AuditUser, @RequestBody event: AuditEvent) {
+        validateUser(user)
         writer.write(user.id, event)
     }
 
@@ -39,6 +47,16 @@ class AuditEventController(
         @RequestHeader("X-API-RequestType") requestType: String,
         @RequestHeader("X-API-RequestURI") requestUri: String
     ) {
+        validateUser(user)
         writer.write(user.id, requestType, requestUri)
+    }
+
+    @Throws(EmailNotVerifiedException::class)
+    private fun validateUser(
+        user: AuditUser
+    ) {
+        if (user.getAttribute<Boolean>("email_verified") != true) {
+            throw EmailNotVerifiedException()
+        }
     }
 }
