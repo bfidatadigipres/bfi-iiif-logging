@@ -4,12 +4,13 @@ resource "auth0_connection" "username_password" {
 
   enabled_clients = [
     auth0_client.dummy_test.id,
-    auth0_client.universal_viewer.id
+    auth0_client.universal_viewer.id,
+    auth0_client.media_player.id
   ]
 
   options {
     brute_force_protection = true
-    disable_signup         = true
+    disable_signup         = false
     requires_username      = false
 
     password_policy = var.auth0_password_policy
@@ -32,6 +33,4 @@ resource "auth0_connection" "username_password" {
       size   = var.auth0_password_history_size
     }
   }
-
-
 }

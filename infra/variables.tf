@@ -12,11 +12,17 @@ locals {
   environment_qualifier = terraform.workspace != "prod" ? " (${upper(terraform.workspace)})" : ""
 
   # Universal Viewer
-  platform_hostnames = {
+  viewer_hostnames = {
     dev  = "bfinationalarchiveviewer-dev.bfi.org.uk"
     prod = "bfinationalarchiveviewer.bfi.org.uk"
   }
-  platform_base_uri = "https://${local.platform_hostnames[terraform.workspace]}"
+  viewer_base_uri = "https://${local.viewer_hostnames[terraform.workspace]}"
+
+  # Media Player
+  player_hostnames = {
+    prod = "collections-online.dpi.bfi.org.uk"
+  }
+  player_base_uri = "https://${local.player_hostnames[terraform.workspace]}"
 
   # Auth0
   auth0_tenant_name = "British Film Institute${local.environment_qualifier}"
