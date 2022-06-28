@@ -2,6 +2,7 @@
 [Unit]
 Description=IIIF Logging Service - <environment>
 After=docker.service
+Restart=always
 
 [Service]
 Type=simple
