@@ -57,6 +57,7 @@ class ExpiredAuthenticationSecurityFilter(
 
         val authentication = SecurityContextHolder.getContext().authentication ?: return false
         val token = authentication as OAuth2AuthenticationToken
+        // TODO - deal with Jwt + OAuthToken
         val client = clients.loadAuthorizedClient<OAuth2AuthorizedClient>(
             token.authorizedClientRegistrationId,
             token.name
