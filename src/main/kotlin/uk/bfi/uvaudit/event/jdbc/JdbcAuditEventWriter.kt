@@ -27,6 +27,7 @@ class JdbcAuditEventWriter(dataSource: DataSource) : AuditEventWriter {
         when (requestType) {
             "manifest" -> writeManifestRequest(auditLogId, requestUri)
             "image" -> writeImageRequest(auditLogId, requestUri)
+            "video" -> writeVideoRequest(auditLogId, requestUri)
             else -> throw Exception("Unexpected request type [$requestType]")
         }
     }
@@ -136,6 +137,23 @@ class JdbcAuditEventWriter(dataSource: DataSource) : AuditEventWriter {
             mapOf(
                 "audit_log_id" to auditLogId,
                 "image" to image
+            )
+        )
+
+        template.update(sql, params)
+    }
+
+    private fun writeVideoRequest(auditLogId: Long, video: String) {
+        val sql = """
+            INSERT INTO request_video
+                (audit_log_id, video)
+            VALUES
+                (:audit_log_id, :video)
+        """
+        val params = MapSqlParameterSource(
+            mapOf(
+                "audit_log_id" to auditLogId,
+                "video" to video
             )
         )
 

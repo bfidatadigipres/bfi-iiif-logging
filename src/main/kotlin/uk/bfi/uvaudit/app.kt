@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.http.HttpStatus
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
+import org.springframework.security.oauth2.jwt.JwtDecoders
 import org.springframework.security.web.authentication.HttpStatusEntryPoint
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 import org.springframework.security.web.util.matcher.RequestMatcher
@@ -45,8 +46,11 @@ class ViewerAuditApplication(
                 it.logoutSuccessUrl("https://${auth0Domain}/v2/logout?returnTo=https://${loggingHostname}&client_id=${auth0ClientId}")
                 it.logoutRequestMatcher(expiredAuthenticationMatcher)
             }
+            .oauth2ResourceServer().jwt {
+                it.decoder(JwtDecoders.fromOidcIssuerLocation("https://${auth0Domain}/"))
+            }
             // This will effectively trigger the auth flow again
-            .csrf().disable()
+            .and().csrf().disable()
     }
 
     @Bean
