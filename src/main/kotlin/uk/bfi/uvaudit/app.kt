@@ -59,6 +59,9 @@ class ViewerAuditApplication(
     }
 
     @Bean
+    fun auditUserService(userDetailsRepository: AuditUserDetailsRepository) = AuditUserService(userDetailsRepository)
+
+    @Bean
     fun auditUserDetailsRepository(dataSource: DataSource) = AuditUserDetailsRepository(dataSource)
 
     @Bean

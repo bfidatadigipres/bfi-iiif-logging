@@ -7,7 +7,6 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUser
 import org.springframework.stereotype.Component
 import uk.bfi.uvaudit.security.repository.AuditUserDetailsRepository
 
-@Component
 class AuditUserService(
     private val userDetails: AuditUserDetailsRepository,
     private val delegate: OidcUserService = OidcUserService()
