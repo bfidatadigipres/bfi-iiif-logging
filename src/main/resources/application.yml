@@ -6,13 +6,13 @@ server:
       cookie:
         domain: ${COOKIE_DOMAIN}
       timeout: ${SESSION_TIMEOUT}
-#  ssl:
-#    enabled: ${SSL_ENABLED}
-#    key-store-type: PKCS12
-#    key-store: ${SSL_KEY_STORE}
-#    key-store-password: ${SSL_KEY_STORE_PASSWORD}
-#    key-alias: ${SSL_KEY_ALIAS}
-#    key-password: ${SSL_KEY_PASSWORD}
+  ssl:
+    enabled: ${SSL_ENABLED}
+    key-store-type: PKCS12
+    key-store: ${SSL_KEY_STORE}
+    key-store-password: ${SSL_KEY_STORE_PASSWORD}
+    key-alias: ${SSL_KEY_ALIAS}
+    key-password: ${SSL_KEY_PASSWORD}
 spring:
   datasource:
     platform: mysql
@@ -39,6 +39,3 @@ spring:
         provider:
           auth0:
             issuer-uri: https://${AUTH0_DOMAIN}/
-logging:
-  level:
-    ROOT: DEBUG
