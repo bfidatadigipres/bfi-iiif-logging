@@ -16,4 +16,3 @@ class OidcAuditUser(
 class JwtAuditUser(override val id: Long) : AuthenticatedPrincipal, AuditUser {
     override fun getName() = id.toString()
 }
-
