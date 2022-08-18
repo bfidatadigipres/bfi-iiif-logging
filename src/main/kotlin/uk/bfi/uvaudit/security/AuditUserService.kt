@@ -21,7 +21,7 @@ class AuditUserService(
             )
         )
 
-        return OidcAuditUser(userId, delegate)
+        return OidcAuditUser(userId, delegate.getAttribute<Boolean>("email_verified") ?: false, delegate)
     }
 
     private fun extractDepartmentClaim(oidcUser: OidcUser): String? {

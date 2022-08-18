@@ -19,7 +19,7 @@ class AuditUserJwtAuthenticationConverter(val userDetails: AuditUserDetailsRepos
         )
 
         val id = userDetails.lookupOrCreate(details)
-        val user = JwtAuditUser(id)
+        val user = JwtAuditUser(id, source.getClaimAsBoolean("email_verified"))
 
         return AuditUserStatelessAuthToken(source, user)
     }
