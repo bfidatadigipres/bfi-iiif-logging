@@ -2,7 +2,6 @@ package uk.bfi.uvaudit.event
 
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -14,17 +13,16 @@ import org.springframework.http.MediaType
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.security.oauth2.core.oidc.OidcIdToken
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser
-import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oauth2Login
 import org.springframework.security.web.util.matcher.RequestMatcher
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.post
-import uk.bfi.uvaudit.security.AuditUser
+import uk.bfi.uvaudit.security.OidcAuditUser
 import java.time.Duration
 import java.time.Instant
 import javax.sql.DataSource
 
-val auditUser = AuditUser(
+val auditUser = OidcAuditUser(
     1, DefaultOidcUser(
         emptyList(),
         OidcIdToken(

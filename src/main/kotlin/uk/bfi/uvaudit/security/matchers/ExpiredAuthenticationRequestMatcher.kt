@@ -1,4 +1,4 @@
-package uk.bfi.uvaudit.security.filter
+package uk.bfi.uvaudit.security.matchers
 
 import com.google.common.cache.CacheBuilder
 import com.google.common.cache.CacheLoader
@@ -18,7 +18,7 @@ import java.time.Duration
 import javax.servlet.http.HttpServletRequest
 
 @Component
-class ExpiredAuthenticationSecurityFilter(
+class ExpiredAuthenticationRequestMatcher(
     val clients: OAuth2AuthorizedClientService,
     @Value("#{environment.AUTH0_DOMAIN}") val auth0Domain: String,
     @Value("#{environment.AUTH0_USERINFO_TTL ?: 20}") val cacheTtl: Long
@@ -56,8 +56,8 @@ class ExpiredAuthenticationSecurityFilter(
         }
 
         val authentication = SecurityContextHolder.getContext().authentication ?: return false
-        val token = authentication as OAuth2AuthenticationToken
-        // TODO - deal with Jwt + OAuthToken
+        val token = authentication as? OAuth2AuthenticationToken ?: return false
+
         val client = clients.loadAuthorizedClient<OAuth2AuthorizedClient>(
             token.authorizedClientRegistrationId,
             token.name

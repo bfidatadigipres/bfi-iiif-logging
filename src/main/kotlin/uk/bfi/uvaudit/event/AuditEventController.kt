@@ -5,10 +5,8 @@ import mu.KotlinLogging
 import org.springframework.http.HttpStatus
 import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.security.core.annotation.AuthenticationPrincipal
-import org.springframework.security.oauth2.jwt.Jwt
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken
 import org.springframework.web.bind.annotation.*
-import uk.bfi.uvaudit.security.AuditUser
+import uk.bfi.uvaudit.security.OidcAuditUser
 
 
 @RestController
@@ -37,7 +35,7 @@ class AuditEventController(
 
     @PostMapping("/api/event")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    fun onEvent(@AuthenticationPrincipal user: AuditUser, @RequestBody event: AuditEvent) {
+    fun onEvent(@AuthenticationPrincipal user: OidcAuditUser, @RequestBody event: AuditEvent) {
         validateUser(user)
         writer.write(user.id, event)
     }
@@ -45,7 +43,7 @@ class AuditEventController(
     @GetMapping("/api/request")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     fun onRequest(
-        @AuthenticationPrincipal user: AuditUser,
+        @AuthenticationPrincipal user: OidcAuditUser,
         @RequestHeader("X-API-RequestType") requestType: String,
         @RequestHeader("X-API-RequestURI") requestUri: String
     ) {
@@ -55,7 +53,7 @@ class AuditEventController(
 
     @Throws(EmailNotVerifiedException::class)
     private fun validateUser(
-        user: AuditUser
+        user: OidcAuditUser
     ) {
         if (user.getAttribute<Boolean>("email_verified") != true) {
             throw EmailNotVerifiedException()
