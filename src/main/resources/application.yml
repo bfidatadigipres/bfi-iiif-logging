@@ -1,4 +1,5 @@
 server:
+  port: 8080
   forward-headers-strategy: native
   servlet:
     session:
@@ -23,6 +24,9 @@ spring:
     locations: classpath:db/migrations
   security:
     oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://${AUTH0_DOMAIN}/
       client:
         registration:
           auth0:

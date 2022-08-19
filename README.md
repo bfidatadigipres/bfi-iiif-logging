@@ -177,7 +177,7 @@ cat /dev/urandom | tr -dc '_A-Z-a-z-0-9' | head -c${1:-32} > /etc/opt/bfi/iiif-l
 cat /dev/urandom | tr -dc '_A-Z-a-z-0-9' | head -c${1:-32} > /etc/opt/bfi/iiif-logging/<environment>/secrets/mysql_root_password
 ```
 
-Deploy the Java KeyStore and associated passphrase files:
+Deploy the Java KeyStore and associated passphrase files :
 
 ```bash
 cp bk-ci-data4.dpi.bfi.org.uk.p12 /etc/opt/bfi/iiif-logging/<environment>/ssl/ssl_key_store

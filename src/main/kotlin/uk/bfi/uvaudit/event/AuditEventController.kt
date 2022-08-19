@@ -55,7 +55,7 @@ class AuditEventController(
     private fun validateUser(
         user: AuditUser
     ) {
-        if (user.getAttribute<Boolean>("email_verified") != true) {
+        if (!user.verified) {
             throw EmailNotVerifiedException()
         }
     }
